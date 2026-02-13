@@ -385,10 +385,75 @@
   }
 
   renderReviews();
-
-
-
 </script>
+
+<script>
+/* ====== МОДАЛКА ====== */
+function openReviewForm() {
+  document.getElementById('review-modal').style.display = 'block';
+}
+
+function closeReviewForm() {
+  document.getElementById('review-modal').style.display = 'none';
+}
+
+/* ====== СОХРАНЕНИЕ ОТЗЫВА ====== */
+function saveReview() {
+
+  const name = document.getElementById('name').value.trim();
+  const text = document.getElementById('text').value.trim();
+
+  if (!name || !text) {
+    alert('Заполните поля');
+    return;
+  }
+
+  const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+  reviews.unshift({ name, text });
+  localStorage.setItem('reviews', JSON.stringify(reviews.slice(0, 3)));
+
+  renderReviews();
+  closeReviewForm();
+
+  // Отправка в Telegram
+  const reviewText =
+    `📝 Новый отзыв:\n` +
+    `👤 Имя: ${name}\n` +
+    `💬 Отзыв: ${text}\n` +
+    `🕒 ${new Date().toLocaleString()}\n` +
+    `🌐 Сайт Pizza Party`;
+
+  fetch("https://my-worker.andreyodr33.workers.dev", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text: reviewText })
+  });
+}
+
+/* ====== ВЫВОД ОТЗЫВОВ ====== */
+function renderReviews() {
+
+  const reviewsList = document.getElementById('reviews-list');
+  const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+
+  reviewsList.innerHTML = '';
+
+  reviews.forEach(r => {
+    const div = document.createElement('div');
+    div.innerHTML = `<strong>${r.name}</strong><p>${r.text}</p>`;
+    reviewsList.appendChild(div);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  renderReviews();
+});
+</script>
+
+</body>
+</html>
+ 
+
 </body>
 </html>
  
@@ -402,6 +467,7 @@
 
 
  
+
 
 
 
