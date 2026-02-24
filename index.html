@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Pizza Party — доставка и самовывоз</title>
+  <title>Pizza Party</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -12,6 +12,14 @@
       background: #f5f5f5;
       color: #222;
     }
+   .phone-link {
+     font-weight: bold;
+     color: #dc143c;
+  }
+
+   .phone-link:hover {
+    text-decoration: underline;
+  }
 
     a {
       color: #8b004b;
@@ -159,235 +167,210 @@
 #review-modal textarea {
   min-height: 80px;
   resize: vertical;
-} 
+}
+ .map-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: #4285F4;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 14px;
+}
 
-   /* ===== RESPONSIVE ===== */
- @media (max-width: 900px) {
-   .menu {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .triple { 
-  grid-template-columns: 1fr;
-  } 
- }
- @media (max-width: 500px) {
-   .menu {
-    grid-template-columns: repeat(2, 1fr);
-   } 
- } 
+.map-btn:hover {
+  opacity: 0.9;
+}
+ 
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+     
+      }
+    }
+
+    @media (max-width: 500px) {
+      .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
   </style>
-
 </head>
-
 <body>
-
 <header>
-  <h1>Pizza Party</h1>
-  <p class="promo">🔥 Скидка -20% на первый заказ</p>
+  <h1 id="company-name">Pizza Party</h1>
+  <p class="promo">🔥 20% OFF on your first order!</p>
 </header>
 
 <main class="container">
 
   <section class="order-start">
-    <h2>Доставка и самовывоз из «Pizza Party»</h2>
+    <h2>Delivery & Pickup from <span id="company-name"></span></h2>
 
     <div class="options">
-      <label><input type="checkbox"> 🚴 Доставка</label>
-      <label><input type="checkbox"> 🥡 Еда на вынос</label>
-      <label><input type="checkbox"> 🍽 За столиком</label>
+      <label><input type="checkbox"> 🚴 Delivery</label>
+      <label><input type="checkbox"> 🥡 Takeaway</label>
+      <label><input type="checkbox"> 🍽 Dine-in</label>
     </div>
 
-    <button class="start-btn">Начать мой заказ</button>
+    <button class="start-btn">Start My Order</button>
   </section>
 
-  <!-- ТРИ БЛОКА В РЯД -->
   <section class="triple">
-
     <div class="box">
-      <p><strong>Адрес:</strong> Dublin, Main Street 12</p>
-      <p><strong>Телефон:</strong> <a href="tel:+353000000000">+353 00 000 0000</a></p>
-      <p><strong>ЧП:</strong> John Doe</p>
-      <img src="facade.jpg" alt="Фасад Pizza Party" class="facade">
+      <p><strong>Address:</strong> <span id="company-address"></span></p>
+      <p><strong>Phone:</strong><a href="tel:+353000000000" class="phone-link">
+      📞 +353 00 000 0000
+   </a>
+ </p>
+      <p><strong>Owner:</strong> John Doe</p>
+      <img src="IMG_1008.JPG" alt="Pizza Party facade" class="facade">
     </div>
+
+   
 
    <div class="box">
-      <h3>Часы работы</h3>
-      <p>Понедельник: 11:00–22:00</p>
-      <p>Вторник: 11:00–22:00</p>
-      <p>Среда: 11:00–22:00</p>
-      <p>Четверг: 11:00–22:00</p>
-      <p>Пятница: 11:00–23:00</p>
-      <p>Суббота: 12:00–23:00</p>
-      <p>Воскресенье: 12:00–22:00</p>
+      <h3>Opening Hours</h3>
+      <p>Monday-Friday 11:00–22:00</p>
+      <p>Saturday: 12:00–23:00</p>
+      <p>Sunday: 12:00–22:00</p>
+      <p><strong>Location:</strong><br/><br/>
+      Dublin, Main Street 12<br/><br/>
+      <a href="https://maps.google.com/?q=Dublin+Main+Street+12" 
+       target="_blank" 
+       class="map-btn">
+      📍 Open in Google Maps
+  </a>
+</p> 
     </div>
- <div class="box">
-   <section class="reviews">
-  <h2>Отзывы клиентов</h2>
 
-  <div id="reviews-list"></div>
-  
-<button class="reviev-btn" onclick="openReviewForm()">➕ Оставить отзыв</button>
-</section>
-     
-  </div>
+    <div class="box">
+      <section class="reviews">
+        <h2>Customer Reviews</h2>
+        <div id="reviews-list"></div>
+        <button class="reviev-btn" onclick="openReviewForm()">➕ Add Review</button>
+      </section>
+    </div>
   </section>
- 
-  <div id="review-modal" style="display:none;">
+
+ </div>
+</section>
+
+<div id="review-modal" style="display:none;">
   <div class="modal-content">
-    <h3>Оставить отзыв</h3>
-    <input id="name" placeholder="Ваше имя">
-    <textarea id="text" placeholder="Ваш отзыв"></textarea>
-    <button onclick="saveReview()">Сохранить</button>
-    <button onclick="closeReviewForm()">Закрыть</button>
-    
+    <h3>Leave a Review</h3>
+    <input id="name" placeholder="Your name">
+    <textarea id="text" placeholder="Your review"></textarea>
+    <button onclick="saveReview()">Submit</button>
+    <button onclick="closeReviewForm()">Close</button>
   </div>
 </div>
-
-
-
   <section class="about">
-    Pizza Party основана в 2018 году семейным предпринимателем.
-    Мы готовим пиццу из свежих ингредиентов и ценим постоянных клиентов.
-  </section>
+  <p><strong>Our Specialties:</strong></p>
+  <p>
+    Margherita (tomato sauce, mozzarella, fresh basil)
+    Pepperoni (tomato sauce, mozzarella, spicy pepperoni)
+    Four Cheese (mozzarella, parmesan, emmental, gorgonzola)
+    Veggie (bell pepper, mushrooms, spinach, tomatoes, olives, onion)
+    Calzone (mozzarella, tomato sauce, minced beef, ham)
+    Capricciosa (tomato sauce, mozzarella, ham, mushrooms, artichokes, olives)
+  </p>
+
+  <p>
+    We prepare our pizzas using fresh, eco-friendly ingredients.
+    During the season, we cook our tomato sauce ourselves using a family recipe.
+    We truly value our loyal customers.
+  </p>
+</section>
+    
 
   <section class="menu">   
-    <div class="card"><img src="pizza1.jpg"><h3>Margherita</h3><p>€9.50</p><button onclick="sendOrder('Margherita', '9.5')">Заказать
-    </button></div>
-    <div class="card"><img src="pizza2.jpg"><h3>Pepperoni</h3><p>€11.00</p><button onclick="sendOrder('Pepperoni', '11.00')">Заказать
-    </button></div>
-    <div class="card"><img src="pizza3.jpg"><h3>Four Cheese</h3><p>€12.00</p><button onclick="sendOrder('Four Cheese', '12.00')">Заказать
-     </button></div>
-    <div class="card"><img src="pizza4.jpg"><h3>Veggie</h3><p>€10.50</p><button onclick="sendOrder('Veggie', '10.50')">Заказать
-     </button></div>
-    <div class="card"><img src="drink1.jpg"><h3>Cola</h3><p>€2.50</p><button onclick="sendOrder('Cola', '2.50')">Заказать
-     </button></div>
-    <div class="card"><img src="drink2.jpg"><h3>Juice</h3><p>€3.00</p><button onclick="sendOrder('Juice', '3.00')">Заказать
-     </button></div>
-    <div class="card"><img src="drink3.jpg"><h3>Water</h3><p>€2.00</p><button onclick="sendOrder('Water', '2.00')">Заказать
-     </button></div>
-    <div class="card"><img src="drink4.jpg"><h3>Coffee</h3><p>€2.80</p><button onclick="sendOrder('Coffee', '2.80')">Заказать
-     </button></div>
+  <div class="card"><img src="IMG_1003.JPG"><h3>Margherita</h3><p>€9.50</p><button onclick="sendOrder('Margherita','9.50')">Order</button></div>
+  <div class="card"><img src="IMG_1005.JPG"><h3>Pepperoni</h3><p>€11.00</p><button onclick="sendOrder('Pepperoni','11.00')">Order</button></div>
+  <div class="card"><img src="IMG_1001.JPG"><h3>Four Cheese</h3><p>€12.00</p><button onclick="sendOrder('Four Cheese','12.00')">Order</button></div>
+  <div class="card"><img src="IMG_1004.JPG"><h3>Veggie</h3><p>€10.50</p><button onclick="sendOrder('Veggie','10.50')">Order</button></div>
+  <div class="card"><img src="IMG_1006.JPG"><h3>Calzone</h3><p>€12.50</p><button onclick="sendOrder('Calzone','12.50')">Order</button></div>
+  <div class="card"><img src="IMG_1007.JPG"><h3>Capricciosa</h3><p>€13.00</p><button onclick="sendOrder('Capricciosa','13.00')">Order</button></div>
+  <div class="card"><img src="IMG_1012.JPG"><h3>Soda</h3><p>€2.00</p><button onclick="sendOrder('Soda','2.00')">Order</button></div>
+  <div class="card"><img src="IMG_1010.JPG"><h3>Coffee</h3><p>€2.80</p><button onclick="sendOrder('Coffee','2.80')">Order</button></div>
+</section>   
     
-  </section>
 
 </main>
 
 <footer>
-  К вашему вниманию демо версия сайта для пиццерии который уже включает такие функции как: интеграцию со службой доставки,
-  адаптацию под мобильные устройства, онлайн переход в Telegram - заказы и отзывы автоматически поступят в ваш чат-бот в Telegram.
-  Сайт полностью готов к использованию-достаточно заменить название и контакты.
-  <a href="https://andreyodr33-eng.github.io/TradeWin/" style="color: green;"  class="btn">back</a>
+  Our pizzeria opened on Valentine's Day 2026.
+  We share all important events and daily moments on Instagram.
+  Follow us and stay connected!
+
+  <br><br>
+  <strong>This website template includes:</strong><br>
+  ✔ Mobile responsive design<br>
+  ✔ Online ordering system<br>
+  ✔ Telegram bot integration (orders + reviews)<br>
+  ✔ Ready-to-use GitHub hosting<br>
 </footer>
  
+<script>
+/* ===== ORDER SYSTEM ===== */
 
- <script>
-  
-   /* ====== СОСТОЯНИЕ ЗАКАЗА ====== */
-  let orderType = '';
-  let orderItems = [];
+let orderType = '';
 
-  const menuSection = document.querySelector('.menu');
-  const startBtn = document.querySelector('.start-btn');
-  const checkboxes = document.querySelectorAll('.options input[type="checkbox"]');
-  
- 
+const menuSection = document.querySelector('.menu');
+const startBtn = document.querySelector('.start-btn');
+const checkboxes = document.querySelectorAll('.options input[type="checkbox"]');
 
-  /* ====== НАЧАТЬ МОЙ ЗАКАЗ ====== */
- 
-  startBtn.addEventListener('click', () => {
-    if (checkboxes[0].checked) {
-      window.location.href = 'https://www.ubereats.com';
-      return;
-    }
+startBtn.addEventListener('click', () => {
 
-    if (checkboxes[1].checked) orderType = 'Еда на вынос';
-    if (checkboxes[2].checked) orderType = 'За столиком';
+  if (checkboxes[0].checked) {
+    window.location.href = "https://www.ubereats.com";
+    return;
+  }
 
-    if (!orderType) {
-      alert('Выберите способ заказа');
-      return;
-    }
+  orderType = '';
 
-    menuSection.scrollIntoView({ behavior: 'smooth' });
-  });
+  if (checkboxes[1].checked) orderType = 'Takeaway';
+  if (checkboxes[2].checked) orderType = 'Dine-in';
 
-  /* ====== КНОПКИ "ЗАКАЗАТЬ" ====== */
-  document.querySelectorAll('.card button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const item = btn.dataset.item;
-      orderItems.push(item);
+  if (!orderType) {
+    alert('Please select order type');
+    return;
+  }
 
-     
-    });
-  });
-  
-   /* ====== ОТПРАВКА ЗАКАЗА В TELEGRAM ====== */
-  function sendOrder(name, price) {
-  const text =
-    `🛒 Новый заказ\n` +
-    `🍕 Товар: ${name}\n` +
-    `💶 Цена: €${price}\n` +
-    `📦 Тип заказа: ${orderType || 'не выбран'}\n`+
-    `🕒 Время: ${new Date().toLocaleString()}\n` +
-    `🌐 Источник: Сайт пиццерии`;
+  menuSection.scrollIntoView({ behavior: 'smooth' });
+});
+
+
+/* ===== SEND ORDER TO TELEGRAM ===== */
+
+function sendOrder(name, price) {
+
+  const message =
+`🛒 New Order
+Type: ${orderType}
+Item: ${name}
+Price: €${price}
+Time: ${new Date().toLocaleString()}`;
 
   fetch("https://my-worker.andreyodr33.workers.dev", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text }) // 🔥 КЛЮЧ
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      text: message
+    })
   })
-  .then(() => {
-    alert(`Заказ отправлен ✅\n${name} — €${price}`);
-  })
-  .catch(err => {
-    console.error(err);
-    alert("Ошибка отправки ❌");
-  });
+  .then(() => alert("Order sent successfully!"))
+  .catch(() => alert("Error sending order"));
 }
 
-  /* ====== ОТЗЫВЫ (ПОСЛЕДНИЕ 3) ====== */
-  const modal = document.getElementById('review-modal');
-  const reviewsList = document.getElementById('reviews-list');
-
-  function openReviewForm() {
-    modal.style.display = 'block';
-  }
-
-  function closeReviewForm() {
-    modal.style.display = 'none';
-  }
-
-  function saveReview() {
-    const name = document.getElementById('name').value.trim();
-    const text = document.getElementById('text').value.trim();
-
-    if (!name || !text) return alert('Заполните поля');
-
-    const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
-    reviews.unshift({ name, text });
-
-    localStorage.setItem('reviews', JSON.stringify(reviews.slice(0, 3)));
-
-    closeReviewForm();
-    renderReviews();
-  }
-
-  function renderReviews() {
-    const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
-    reviewsList.innerHTML = '';
-
-    reviews.forEach(r => {
-      const div = document.createElement('div');
-      div.innerHTML = `<strong>${r.name}</strong><p>${r.text}</p>`;
-      reviewsList.appendChild(div);
-    });
-  }
-
-  renderReviews();
 </script>
-
 <script>
-/* ====== МОДАЛКА ====== */
+/* ===== REVIEW MODAL ===== */
+
 function openReviewForm() {
   document.getElementById('review-modal').style.display = 'block';
 }
@@ -396,40 +379,48 @@ function closeReviewForm() {
   document.getElementById('review-modal').style.display = 'none';
 }
 
-/* ====== СОХРАНЕНИЕ ОТЗЫВА ====== */
+/* ===== SAVE REVIEW ===== */
+
 function saveReview() {
 
   const name = document.getElementById('name').value.trim();
   const text = document.getElementById('text').value.trim();
 
   if (!name || !text) {
-    alert('Заполните поля');
+    alert('Please fill in both fields');
     return;
   }
 
   const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+
   reviews.unshift({ name, text });
+
   localStorage.setItem('reviews', JSON.stringify(reviews.slice(0, 3)));
 
   renderReviews();
   closeReviewForm();
 
-  // Отправка в Telegram
-  const reviewText =
-    `📝 Новый отзыв:\n` +
-    `👤 Имя: ${name}\n` +
-    `💬 Отзыв: ${text}\n` +
-    `🕒 ${new Date().toLocaleString()}\n` +
-    `🌐 Сайт Pizza Party`;
+  /* SEND REVIEW TO TELEGRAM */
+
+  const reviewMessage =
+`📝 New Review
+Name: ${name}
+Review: ${text}
+Time: ${new Date().toLocaleString()}`;
 
   fetch("https://my-worker.andreyodr33.workers.dev", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text: reviewText })
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      text: reviewMessage
+    })
   });
 }
 
-/* ====== ВЫВОД ОТЗЫВОВ ====== */
+/* ===== RENDER REVIEWS ===== */
+
 function renderReviews() {
 
   const reviewsList = document.getElementById('reviews-list');
@@ -447,10 +438,34 @@ function renderReviews() {
 document.addEventListener("DOMContentLoaded", function () {
   renderReviews();
 });
+
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Pizza Party",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Main Street 12",
+    "addressLocality": "Dublin",
+    "addressCountry": "IE"
+  },
+  "telephone": "+353000000000"
+}
+</script>
+
 
 </body>
 </html>
+
+
+
+
+
+
+
+
  
 
 
@@ -466,6 +481,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
  
+
 
 
 
