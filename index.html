@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="color-scheme" content="light">
-<meta name="format-detection" content="telephone=no">
-<link rel="icon" href="favicon.png" type="image/png">
-<link rel="apple-touch-icon" href="favicon.png"> 
-<meta name="apple-mobile-web-app-status-bar-style" content="default">   
-<meta name="theme-color" content="#ffcc00">
-<title>Pizza Party</title>
-<style>
-    * {
+  <meta charset="UTF-8">
+  <title>Pizza Party</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+   * {
       box-sizing: border-box;
   }
-    body {
+   body {
        overflow-x: hidden;
-   }
+  }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -31,9 +26,6 @@
    .phone-link:hover {
     text-decoration: underline;
   }
-   html {
-      -webkit-text-size-adjust: 100%
-   }    
 
     a {
       color: #8b004b;
@@ -195,25 +187,25 @@
 .map-btn:hover {
   opacity: 0.9;
 }
+ 
 
-     /* ===== RESPONSIVE ===== */
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 900px) {
       .menu {
         grid-template-columns: repeat(2, 1fr);
+     
       }
-    } 
-     @media (max-width: 500px) {
+    }
+
+    @media (max-width: 500px) {
       .triple {
          grid-template-columns: 1fr;
-     }
+   }
       .menu {
         grid-template-columns: repeat(2, 1fr);
       }
-    } 
-      
+    }
   </style>
- 
-
 </head>
 <body>
 <header>
@@ -303,16 +295,7 @@
 </section>
     
 
-  <section class="menu">   
-  <div class="card"><img src="IMG_1003.JPG"><h3>Margherita</h3><p>€9.50</p><button onclick="sendOrder('Margherita','9.50')">Order</button></div>
-  <div class="card"><img src="IMG_1005.JPG"><h3>Pepperoni</h3><p>€11.00</p><button onclick="sendOrder('Pepperoni','11.00')">Order</button></div>
-  <div class="card"><img src="IMG_1001.JPG"><h3>Four Cheese</h3><p>€12.00</p><button onclick="sendOrder('Four Cheese','12.00')">Order</button></div>
-  <div class="card"><img src="IMG_1004.JPG"><h3>Veggie</h3><p>€10.50</p><button onclick="sendOrder('Veggie','10.50')">Order</button></div>
-  <div class="card"><img src="IMG_1006.JPG"><h3>Calzone</h3><p>€12.50</p><button onclick="sendOrder('Calzone','12.50')">Order</button></div>
-  <div class="card"><img src="IMG_1007.JPG"><h3>Capricciosa</h3><p>€13.00</p><button onclick="sendOrder('Capricciosa','13.00')">Order</button></div>
-  <div class="card"><img src="IMG_1012.JPG"><h3>Soda</h3><p>€2.00</p><button onclick="sendOrder('Soda','2.00')">Order</button></div>
-  <div class="card"><img src="IMG_1010.JPG"><h3>Coffee</h3><p>€2.80</p><button onclick="sendOrder('Coffee','2.80')">Order</button></div>
-</section>   
+<section class="menu"></section>   
     
 
 </main>
@@ -320,14 +303,20 @@
 <footer>
   Our pizzeria opened on Valentine's Day 2026.
   We share all important events and daily moments on Instagram.
-  Follow us and stay connected!
+  Follow us and stay connected!<br/>
 
-  <br><br>
+ <a href="https://www.instagram.com/your_username" target="_blank" style="display:inline-block; margin-top:8px;">
+ <img src="instagram-logo.png" alt="Instagram" style="width:24px; height:24px; vertical-align:middle;">
+ </a>
+ <br><br>
   <strong>This website template includes:</strong><br>
-  ✔ Mobile responsive design<br>
+  
+ ✔ Mobile responsive design<br>
   ✔ Online ordering system<br>
   ✔ Telegram bot integration (orders + reviews)<br>
-  ✔ Ready-to-use GitHub hosting<br>
+  ✔ Ready-to-use GitHub hosting<br> 
+ <a href="https://docs.google.com/spreadsheets/d/1PAi1zXz-S8jXxkUJHSeR22rrm6eyjjIkks_kyZ0vSgY/edit" 
+   id="adminLink" target="_blank" style="color:#8b004b; font-weight:bold;">⚙ admin</a>
 </footer>
  
 <script>
@@ -472,9 +461,67 @@ document.addEventListener("DOMContentLoaded", function () {
 }
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  const menuContainer = document.querySelector('.menu');
+  if (!menuContainer) return;
+
+  fetch('https://opensheet.elk.sh/1PAi1zXz-S8jXxkUJHSeR22rrm6eyjjIkks_kyZ0vSgY/PizzaMenu')
+    .then(res => res.json())
+    .then(menu => {
+
+      menuContainer.innerHTML = '';
+
+      menu.forEach(dish => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${dish.img}" alt="${dish.name}">
+          <h3>${dish.name}</h3>
+          <p>€${dish.price}</p>
+          <button onclick="sendOrder('${dish.name}', '${dish.price}')">
+            Заказать
+          </button>
+        `;
+        menuContainer.appendChild(card);
+      });
+
+    })
+    .catch(err => console.error('Ошибка загрузки:', err));
+
+});
+</script>
+
+<script>
+
+<!-- Access protection for Google Sheets -->
+
+document.getElementById('adminLink').addEventListener('click', function(e){
+  e.preventDefault();
+
+  const pass = prompt("Enter password:");
+
+  if(pass === "12345"){ // Correct password
+   
+    window.location.href = this.href; // или this.click() via setTimeout
+  } else {
+    alert("Incorrect password!");
+  }
+});
+  
+</script>
+
 
 </body>
 </html>
+
+
+
+
+
+
+
 
 
 
@@ -498,6 +545,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
  
+
 
 
 
