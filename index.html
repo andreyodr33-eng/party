@@ -318,6 +318,16 @@
  <a href="https://docs.google.com/spreadsheets/d/1PAi1zXz-S8jXxkUJHSeR22rrm6eyjjIkks_kyZ0vSgY/edit" 
    id="adminLink" target="_blank" style="color:#8b004b; font-weight:bold;">⚙ admin</a>
 </footer>
+<script>
+// ===== Получаем номер стола из QR =====
+(function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const table = urlParams.get('table');
+
+  // Делаем переменную глобальной
+  window.tableNumber = table ? table : 'Not specified';
+})();
+</script>  
  
 <script>
 /* ===== ORDER SYSTEM ===== */
@@ -545,6 +555,7 @@ document.getElementById('adminLink').addEventListener('click', function(e){
 
 
  
+
 
 
 
