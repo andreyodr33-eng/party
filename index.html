@@ -368,6 +368,7 @@ function sendOrder(name, price) {
 Type: ${orderType}
 Item: ${name}
 Price: €${price}
+Table: ${tableNumber}
 Time: ${new Date().toLocaleString()}`;
 
   fetch("https://my-worker.andreyodr33.workers.dev", {
@@ -555,6 +556,7 @@ document.getElementById('adminLink').addEventListener('click', function(e){
 
 
  
+
 
 
 
