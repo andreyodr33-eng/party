@@ -348,7 +348,7 @@ startBtn.addEventListener('click', () => {
   }
 
   orderType = '';
-
+  if (checkboxes[0].checked) orderType = 'Delivery';
   if (checkboxes[1].checked) orderType = 'Takeaway';
   if (checkboxes[2].checked) orderType = 'Dine-in';
 
