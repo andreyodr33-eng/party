@@ -410,13 +410,19 @@ function showWords(topic) {
                     ✕
                 </button>
 
-                <div class="word">
-                    ${item.right}
-                </div>
+                <div class="card-text">
+                   <span class="word">
+                       ${item.right}
+                </span>
 
-                <div class="translation">
-                    ${item.left}
-                </div>
+                <span class="separator">
+                  —
+                </span>
+
+                <span class="translation">
+                     ${item.left}
+               </span>
+          </div>
             `;
 
            card.addEventListener(
