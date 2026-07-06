@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>notebook</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f5f5f5;
+    margin:0;
+    padding:15px;
+}
+
+.container{
+    max-width:500px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+#currentTopic{
+    text-align:center;
+    margin:20px 0;
+    color:#333;
+}
+
+.form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+input,
+select,
+button{
+    width:100%;
+    box-sizing:border-box;
+    padding:12px;
+    font-size:16px;
+    border-radius:10px;
+    border:1px solid #ccc;
+}
+
+button{
+    background:#1976d2;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+button:active{
+    transform:scale(0.98);
+}
+
+#cards{
+    margin-top:20px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.card{
+    position:relative;
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    box-shadow:0 2px 6px rgba(0,0,0,.12);
+    cursor:pointer;
+}
+
+.card:active{
+    transform:scale(0.98);
+}
+
+.word{
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.translation{
+    font-size:18px;
+    color:#555;
+}
+
+.delete-btn{
+    position:absolute;
+    top:8px;
+    right:8px;
+    width:28px;
+    height:28px;
+    border:none;
+    background:none;
+    color:#c62828;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
+    padding:0;
+}
+
+.delete-btn:hover{
+    background:none;
+}
+
+@media (max-width:600px){
+
+    body{
+        padding:10px;
+    }
+
+    .word{
+        font-size:20px;
+    }
+
+    .translation{
+        font-size:16px;
+    }
+ }
+   .actions{
+        display:flex;
+        gap:10px;
+        margin-top:10px;
+ }
+   #topic{
+       flex:1;
+ }
+   #addBtn{
+       flex:0 0 70px;
+  }
+.input-row{
+    display:flex;
+    gap:8px;
+    margin-bottom:10px;
+}
+
+.input-row input{
+    flex:1;
+}
+
+.input-row button{
+    flex:0 0 70px;
+}
+
+</style>
+</head>
+<body>
+<div class="container">
+
+    <h1>Personal dictionary</h1>
+
+    <div class="form">
+
+        <div class="input-row">
+
+    <input
+        id="leftWord"
+        placeholder="Word">
+
+    <button
+        id="lang1Btn"
+        type="button">
+        RU
+    </button>
+
+</div>
+
+        <div class="input-row">
+
+    <input
+        id="rightWord"
+        placeholder="Word">
+
+    <button
+        id="lang2Btn"
+        type="button">
+        EN
+    </button>
+
+</div>
+    <div class="actions">
+        <select id="topic">
+            <option>Home</option>
+            <option>Work</option>
+            <option>Transport</option>
+            <option>Hospital</option>
+            <option>Food</option>
+            <option>Buy</option>
+        </select>
+
+        <button id="addBtn">
+            Add
+        </button>
+
+  </div>
+
+     <div id="cards"></div>
+  </div>
+
+
+<script>
+
+let db;
+
+let lang1Index =
+    Number(
+        localStorage.getItem("lang1Index")
+    );
+
+let lang2Index =
+    Number(
+        localStorage.getItem("lang2Index")
+    );
+
+if (isNaN(lang1Index)) {
+    lang1Index = 1; // RU
+}
+
+if (isNaN(lang2Index)) {
+    lang2Index = 0; // EN
+}
+let currentTopic = "Home";
+const languages = [
+    {
+        name: "English",
+        code: "en-US",
+        short: "EN"
+    },
+    {
+        name: "Russian",
+        code: "ru-RU",
+        short: "RU"
+    },
+    {
+        name: "Ukrainian",
+        code: "uk-UA",
+        short: "UA"
+    },
+    {
+        name: "Spanish",
+        code: "es-ES",
+        short: "ES"
+    },
+    {
+        name: "French",
+        code: "fr-FR",
+        short: "FR"
+    }
+];
+
+const request = indexedDB.open("EnglishNotebook", 1);
+
+request.onupgradeneeded = function(event) {
+
+    db = event.target.result;
+
+    if (!db.objectStoreNames.contains("words")) {
+
+        const store = db.createObjectStore("words", {
+            keyPath: "id",
+            autoIncrement: true
+        });
+
+        store.createIndex("topic", "topic", {
+            unique: false
+        });
+    }
+};
+
+request.onsuccess = function(event) {
+
+    db = event.target.result;
+
+    showWords(currentTopic);
+};
+
+request.onerror = function(error) {
+    console.error("IndexedDB error:", error);
+};
+
+document
+.getElementById("addBtn")
+.addEventListener("click", addWord);
+document
+.getElementById("lang1Btn")
+.textContent =
+languages[lang1Index].short;
+
+document
+.getElementById("lang2Btn")
+.textContent =
+languages[lang2Index].short;
+document
+.getElementById("topic")
+.addEventListener("change", function() {
+
+    currentTopic = this.value;
+
+    showWords(currentTopic);
+});
+
+ 
+
+function addWord() {
+
+    const left =
+        document.getElementById("leftWord")
+        .value
+        .trim();
+
+    const right =
+        document.getElementById("rightWord")
+        .value
+        .trim();
+
+    const topic =
+        document.getElementById("topic")
+        .value;
+
+    if (!left || !right) return;
+
+    const tx =
+        db.transaction(
+            "words",
+            "readwrite"
+        );
+
+    const store =
+        tx.objectStore("words");
+
+    store.add({
+        left,
+        right,
+        topic,
+        lang1: languages[lang1Index].code,
+        lang2: languages[lang2Index].code
+    });
+
+    tx.oncomplete = () => {
+
+        document.getElementById("leftWord").value = "";
+        document.getElementById("rightWord").value = "";
+
+        document.getElementById("leftWord").focus();
+
+        showWords(currentTopic);
+    };
+}
+
+function showWords(topic) {
+
+    const tx =
+        db.transaction(
+            "words",
+            "readonly"
+        );
+
+    const store =
+        tx.objectStore("words");
+
+    const req =
+        store.getAll();
+
+    req.onsuccess = function() {
+
+        const cards =
+            document.getElementById("cards");
+
+        cards.innerHTML = "";
+
+        const currentLang1 =
+            languages[lang1Index].code;
+
+        const currentLang2 =
+            languages[lang2Index].code;
+
+        const words = req.result.filter(word =>
+            word.topic === topic &&
+            word.lang1 === currentLang1 &&
+            word.lang2 === currentLang2
+    );
+
+        words.forEach(item => {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "card";
+
+            card.innerHTML = `
+                <button
+                    class="delete-btn"
+                    title="Удалить">
+                    ✕
+                </button>
+
+                <div class="word">
+                    ${item.right}
+                </div>
+
+                <div class="translation">
+                    ${item.left}
+                </div>
+            `;
+
+           card.addEventListener(
+                "click",
+                () => speak(
+                    item.right,
+                    item.lang2
+            )
+        );
+
+            card.querySelector(
+                ".delete-btn"
+            ).addEventListener(
+                "click",
+                (e) => {
+
+                    e.stopPropagation();
+
+                    deleteWord(item.id);
+                }
+            );
+
+            cards.appendChild(card);
+        });
+    };
+}
+
+function deleteWord(id) {
+
+    const tx =
+        db.transaction(
+            "words",
+            "readwrite"
+        );
+
+    const store =
+        tx.objectStore("words");
+
+    store.delete(id);
+
+    tx.oncomplete = () => {
+
+        showWords(currentTopic);
+    };
+}
+
+function speak(text, lang) {
+
+    speechSynthesis.cancel();
+
+    const utterance =
+        new SpeechSynthesisUtterance(text);
+
+    utterance.lang = lang;
+    utterance.rate = 0.9;
+
+    speechSynthesis.speak(
+        utterance
+    );
+}
+// Выбор темы
+document
+.getElementById("topic")
+.addEventListener("change", function() {
+
+    currentTopic = this.value;
+
+    showWords(currentTopic);
+});
+
+
+// Переключение языка 1
+
+document
+.getElementById("lang1Btn")
+.addEventListener("click", () => {
+
+    lang1Index++;
+
+    if (lang1Index >= languages.length) {
+        lang1Index = 0;
+    }
+
+    document
+        .getElementById("lang1Btn")
+        .textContent =
+        languages[lang1Index].short;
+
+    localStorage.setItem(
+        "lang1Index",
+        lang1Index
+    );
+
+    showWords(currentTopic);
+});
+
+// Переключение языка 2
+
+document
+.getElementById("lang2Btn")
+.addEventListener("click", () => {
+
+    lang2Index++;
+
+    if (lang2Index >= languages.length) {
+        lang2Index = 0;
+    }
+
+    document
+        .getElementById("lang2Btn")
+        .textContent =
+        languages[lang2Index].short;
+
+    localStorage.setItem(
+        "lang2Index",
+        lang2Index
+    );
+
+    showWords(currentTopic);
+});
+
+
+</script>
+
+</body>
+</html>
