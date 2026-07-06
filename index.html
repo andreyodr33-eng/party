@@ -1,850 +1,537 @@
-<!Doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>English Cards Pro</title>
-
-    <style>
-      body {
-        font-family: Arial;
-        background: #111;
-        color: #fff;
-        text-align: center;
-        padding: 30px;
-      }
-
-      .card {
-        font-size: 42px;
-        margin: 20px;
-        color: #00ff88;
-      }
-
-      .btn {
-        display: block;
-        margin: 10px auto;
-        padding: 12px;
-        width: 260px;
-        font-size: 18px;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-      }
-
-      .btn:hover {
-        background: #333;
-      }
-
-      .small {
-        font-size: 14px;
-        margin-top: 10px;
-      }
-      .correct {
-        background: #28a745 !important;
-        color: white;
-      }
-
-      .wrong {
-        background: #dc3545 !important;
-        color: white;
-      }
-      #topicLabel {
-        color: #00bfff;
-        text-shadow: 0 0 5px #00bfff;
-      }
-      .hint-btn {
-        color: #00bfff;
-      }
-    </style>
-  </head>
-
-  <body>
-    <span id="topicLabel"></span>
-    <button onclick="nextTopic()">темa</button>
-    <div class="card" id="word">---</div>
-    <div id="hint" class="small"></div>
-    <div id="options"></div>
-
-    <button onclick="speak()" class="btn">🔊 звук</button>
-    <button onclick="showHint()" class="btn hint-btn">Подсказка</button>
-    <button onclick="showDiagnostics()">📊</button>
-    <p>Счёт: <span id="score">0</span></p>
-
-    <script>
-      let db;
-      // --------------------
-      // СЛОВА
-      // --------------------
-      let words = [
-        // глаголы
-
-        {en: "arrive", ru: "приезжать", example: "I arrive at the station", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0 }, 
-        {en: "answer", ru: "отвечать", example: "I answer the question", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0 }, 
-        {en: "ask", ru: "просить", example: "I ask for help", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0}, 
-        {en: "buy", ru: "покупать", example: "I buy a ticket", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0}, {
-          en: "bye", ru: "пока", example: "Bye,see you!", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0}, {
-          en: "be", ru: "быть", example: "I am happy", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "close", ru: "закрывать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "can", ru: "могу", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "call", ru: "звонить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "cook", ru: "готовить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "come", ru: "приходить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "check out", ru: "выселиться", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "clean", ru: "чистить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "dance", ru: "танцевать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "drink", ru: "пить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "drive", ru: "водить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "do", ru: "делать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "eat", ru: "есть", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "finish", ru: "закончить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "find", ru: "находить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "feel", ru: "чувствовать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "go", ru: "идти", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "give", ru: "давать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "get", ru: "получать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "have", ru: "иметь", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "help", ru: "помогать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "hear", ru: "cлышать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "hate", ru: "ненавидеть", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "how are you", ru: "как дела", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "how much is it", ru: "сколько это будет стоить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "know", ru: "знать", topic: "verbs", weight: 5, shown: 0, errors: 0, }, {
-          en: "like", ru: "нравится", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "live", ru: "жить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "listen", ru: "слушать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "love", ru: "любить", topic: "verbs", weight: 5, shown: 0, errors: 0, }, {
-          en: "look", ru: "смотреть", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "learn", ru: "учиться", topic: "verbs", weight: 5, shown: 0, errors: 0, }, {
-          en: "leave", ru: "оставлять", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "must", ru: "должен", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "make", ru: "делать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "meet", ru: "встретиться", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "need", ru: "нужен", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "open", ru: "открывать", topic: "verbs", weight: 5, shown: 0, errors: 0, }, {
-          en: "put", ru: "ложить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "play", ru: "играть", topic: "verbs", weight: 5, shown: 0, errors: 0, }, {
-          en: "read", ru: "читать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "run", ru: "бежать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "ride", ru: "ехать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "reply", ru: "отвечать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "see", ru: "видеть", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "sleep", ru: "спать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "sell", ru: "продавать", topic: "verbs", weight: 5, shown: 0, errors: 0, }, {
-          en: "study", ru: "учить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "sit", ru: "сидеть", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "swim", ru: "плавать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "sing", ru: "петь", topic: "verbs", weight: 5, shown: 0, errors: 0, }, {
-          en: "stew", ru: "тушить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "start", ru: "начинать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "speak", ru: "говорить", topic: "verbs", weight: 5, shown: 0, errors: 0, }, {
-          en: "say", ru: "говорю", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "stand", ru: "стоять", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "stay", ru: "остаться", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "stop", ru: "останавливаться", topic: "verbs", weight: 5, shown: 0, errors: 0, }, {
-          en: "thank you", ru: "спасибо", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "take", ru: "брать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "top up", ru: "пополнить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "try", ru: "пытаться", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "turn", ru: "повернуть", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "tell", ru: "рассказывать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "travel", ru: "путешествовать", topic: "verbs", weight: 5, shown: 0, errors: 0, }, {
-          en: "think", ru: "думать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "toothache", ru: "зубная боль", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "use", ru: "использовать", topic: "verbs", weight: 5, shown: 0, errors: 0, }, {
-          en: "understand", ru: "понимаю", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "visit", ru: "навещать", topic: "verbs", weight: 5, shown: 0, errors: 0, }, {
-          en: "want", ru: "хотеть", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "work", ru: "работать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "watch", ru: "смотреть", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "would like", ru: "хотел бы", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "walk", ru: "ходить", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "write", ru: "писать", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "why", ru: "почему", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, 
-           
-          // тема приветствие
-        
-         { en: "Hello", ru: "Здравствуйте / Привет", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Hi", ru: "Привет", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Good morning", ru: "Доброе утро", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Good afternoon", ru: "Добрый день", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Good evening", ru: "Добрый вечер", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "How are you?", ru: "Как дела?", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I’m fine", ru: "Я в порядке", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I’m good", ru: "У меня всё хорошо", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Not bad", ru: "Неплохо", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "And you?", ru: "А ты?", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Goodbye", ru: "До свидания", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Bye", ru: "Пока", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "See you", ru: "Увидимся", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "See you later", ru: "Увидимся позже", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Take care", ru: "Береги себя", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "My name is…", ru: "Меня зовут…", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Nice to meet you", ru: "Приятно познакомиться", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Where are you from?", ru: "Откуда ты?", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I am from Ukraine", ru: "Я из Украины", topic: "greetings", weight: 5, shown: 0, errors: 0, hints: 0, },
-
-                // тема знакомства
-        
-          {en: "What is your name?", ru: "Как тебя зовут?", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0 }, {
-          en: "My name is...", ru: "Меня зовут...", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Nice to meet you", ru: "Приятно познакомиться", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Where are you from?", ru: "Откуда ты?", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I am from Ukraine", ru: "Я из Украины", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Where do you live?", ru: "Где ты живёшь?", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I live in Kyiv", ru: "Я живу в Киеве", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "How old are you?", ru: "Сколько тебе лет?", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I am thirty years old", ru: "Мне тридцать лет", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "What do you do?", ru: "Кем ты работаешь?", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I work as a teacher", ru: "Я работаю учителем", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I am a student", ru: "Я студент", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Do you speak English?", ru: "Ты говоришь по-английски?", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "A little", ru: "Немного", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Can you help me?", ru: "Можете мне помочь?", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I am learning English", ru: "Я учу английский", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "What is your job?", ru: "Какая у тебя работа?", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Are you married?", ru: "Ты женат / замужем?", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I have two children", ru: "У меня двое детей", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "What are your hobbies?", ru: "Какие у тебя увлечения?", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I like travelling", ru: "Мне нравится путешествовать", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Let's keep in touch", ru: "Давай оставаться на связи", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Here is my phone number", ru: "Вот мой номер телефона", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "See you again", ru: "Увидимся снова", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Have a nice day", ru: "Хорошего дня", topic: "introduction", weight: 5, shown: 0, errors: 0, hints: 0, },
-           
-          // тема еда (разговорная)
-
-     { en: "I'm hungry", ru: "Я голодный", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "I'm thirsty", ru: "Я хочу пить", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "Let's eat", ru: "Давай поедим", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "Let's grab a bite", ru: "Давай перекусим", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "I'm starving", ru: "Я ужасно голоден", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-
-     { en: "This is delicious", ru: "Это очень вкусно", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "It's really good", ru: "Это действительно вкусно", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "I love this", ru: "Мне это очень нравится", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "It's not bad", ru: "Неплохо", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "It's too salty", ru: "Слишком солёное", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-
-     { en: "It's too spicy", ru: "Слишком острое", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "It's too sweet", ru: "Слишком сладкое", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "I like it", ru: "Мне нравится", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "I don't like it", ru: "Мне не нравится", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-
-     { en: "Can I try it?", ru: "Можно попробовать?", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "Try this", ru: "Попробуй это", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "What are you eating?", ru: "Что ты ешь?", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "Do you want some?", ru: "Хочешь немного?", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-
-     { en: "I'm full", ru: "Я наелся", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "I've had enough", ru: "Мне хватит", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "One more, please", ru: "Ещё один, пожалуйста", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-
-     { en: "I need some coffee", ru: "Мне нужен кофе", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "I need some water", ru: "Мне нужна вода", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-     { en: "Cheers!", ru: "Будем!", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-
-     { en: "That hit the spot", ru: "То что нужно", topic: "food", weight: 5, shown: 0, errors: 0, hints: 0 },
-
-
-          // тема покупки
-
-        
-         {en: "Can I help you?", ru: "Могу я вам помочь?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I am just looking", ru: "Я просто смотрю", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I would like to buy this", ru: "Я хотел бы купить это", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "How much is it?", ru: "Сколько это стоит?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "That is too expensive", ru: "Это слишком дорого", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Do you have a cheaper one?", ru: "У вас есть вариант дешевле?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Do you have this in another size?", ru: "У вас есть это в другом размере?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Do you have this in another color?", ru: "У вас есть это в другом цвете?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Can I try it on?", ru: "Можно примерить?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Where is the fitting room?", ru: "Где примерочная?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "It fits well", ru: "Хорошо сидит", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "It is too small", ru: "Это слишком маленькое", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "It is too big", ru: "Это слишком большое", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I will take it", ru: "Я беру это", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Can I pay by card?", ru: "Можно оплатить картой?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I will pay in cash", ru: "Я заплачу наличными", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Where is the cashier?", ru: "Где касса?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Can I get a receipt?", ru: "Можно чек?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Do you have any discounts?", ru: "Есть ли скидки?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Is this on sale?", ru: "На это есть скидка?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Can I return this?", ru: "Можно вернуть это?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I need something for travel", ru: "Мне нужно что-то для путешествия", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "I am looking for a gift", ru: "Я ищу подарок", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Thank you for your help", ru: "Спасибо за помощь", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Do you need a bag?", ru: "Вам нужен пакет?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Would you like a bag?", ru: "Вам нужен пакет?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Do you have a loyalty card?", ru: "У вас есть карта лояльности?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Would you like a receipt?", ru: "Вам нужен чек?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Anything else?", ru: "Что-нибудь ещё?", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Yes, please", ru: "Да, пожалуйста", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "No, thank you", ru: "Нет, спасибо", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "That's all", ru: "Это всё", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "No bag, thank you", ru: "Пакет не нужен, спасибо", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "Keep the receipt", ru: "Чек не нужен", topic: "shopping", weight: 5, shown: 0, errors: 0, hints: 0, },
-
-           
-
-           // тема повседневное общение (everyday)
-
-        { en: "Really?", ru: "Правда?", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "No way!", ru: "Да ладно!", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "Sounds good", ru: "Звучит хорошо", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "I don't know", ru: "Я не знаю", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "Maybe", ru: "Может быть", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-
-        { en: "Of course", ru: "Конечно", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "I think so", ru: "Я так думаю", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "I don't think so", ru: "Я так не думаю", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "You're right", ru: "Ты прав", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "Exactly", ru: "Точно", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-
-        { en: "I agree", ru: "Я согласен", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "Not really", ru: "Не совсем", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "It depends", ru: "Это зависит", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "No problem", ru: "Без проблем", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "Never mind", ru: "Неважно", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-
-        { en: "Good idea", ru: "Хорошая идея", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "That's a good point", ru: "Это хороший аргумент", topic: "everyday", weight: 4, shown: 0, errors: 0, hints: 0 },
-        { en: "I see", ru: "Понятно", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "Got it", ru: "Понял", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "That makes sense", ru: "В этом есть смысл", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-
-        { en: "What's going on?", ru: "Что происходит?", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "I'm not sure", ru: "Я не уверен", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "We'll see", ru: "Посмотрим", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-        { en: "Let's go", ru: "Пошли", topic: "everyday", weight: 5, shown: 0, errors: 0, hints: 0 },
-
-  
-           // сушествительные
-
-        
-          {en: "tree", ru: "дерево", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "bus", ru: "автобус", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "book", ru: "книга", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "bed", ru: "кровать", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "bank", ru: "банк", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "bread", ru: "хлеб", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "bag", ru: "сумка", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "business", ru: "бизнес", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "bathroom", ru: "ванная", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "ballet", ru: "баллет", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "badly", ru: "плохо", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "car", ru: "автомобиль", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "city", ru: "город", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "card", ru: "карта", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "company", ru: "компания", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "chair", ru: "стул", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "chicken", ru: "курица", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "coffee", ru: "кофе", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "computer", ru: "компьютер", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "cartoons", ru: "мультфильмы", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "cake", ru: "торт", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "cash", ru: "наличные", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "classes", ru: "занятия", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "choice", ru: "выбор", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "door", ru: "дверь", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "doctor", ru: "врач", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "dishes", ru: "тарелки", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "difference", ru: "разница", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "dog", ru: "собака", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "English", ru: "английский", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "email", ru: "e-почта", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "family", ru: "семья", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "friend", ru: "друг", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "free", ru: "свободен", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "food", ru: "еда", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "factory", ru: "фабрика", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "floor", ru: "пол", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "fridge", ru: "холодильник", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "fault", ru: "вина", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "fever", ru: "высокая температура", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "fall", ru: "осень", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "for", ru: "для", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "guitar", ru: "гитара", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "game", ru: "игра", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "good", ru: "хорошо", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "house", ru: "дом", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "home", ru: "дом", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "happy", ru: "счастлив", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "headache", ru: "головная боль", topic: "verbs", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "hospital", ru: "больница", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "help", ru: "помощь", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "hello", ru: "привет", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "homework", ru: "уроки", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "here", ru: "здесь", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "history", ru: "история", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "hotel", ru: "отель", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "joke", ru: "шутка", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "job", ru: "работа", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "key", ru: "ключь", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "kitchen", ru: "кухня", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "lawyer", ru: "юрист", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "letter", ru: "письмо", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "line", ru: "линия", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "left", ru: "лево", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "laundry", ru: "прачечная", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "lies", ru: "ложь", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "lake", ru: "озеро", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "lesson", ru: "урок", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "music", ru: "музыка", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "milk", ru: "молоко", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "movie", ru: "фильм", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "money", ru: "деньги", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "medicine", ru: "лекарство", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "major", ru: "специальность", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "morning", ru: "утро", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "message", ru: "сообщение", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "math", ru: "математика", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "month", ru: "месяц", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "menu", ru: "меню", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "meat", ru: "мясо", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "name", ru: "имя", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, hints: 0, }, {
-          en: "news", ru: "новости", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "no", ru: "нет", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "office", ru: "офис", topic: "nouns", weight: 5, shown: 0, errors: 0, }, {
-          en: "ocean", ru: "океан", topic: "nouns", weight: 5, shown: 0, errors: 0, }, {
-          en: "picture", ru: "картина", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "phone", ru: "телефон", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "pharmacy", ru: "аптека", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "park", ru: "парк", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "parents", ru: "родители", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "pool", ru: "бассейн", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "prescriptions", ru: "рецепт", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "parties", ru: "вечеринки", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "plan", ru: "план", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "problem", ru: "проблема", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "potatoes", ru: "картофель", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "question", ru: "вопрос", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "ready", ru: "готов", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "road", ru: "дорога", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "reading", ru: "чтение", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "running", ru: "бег", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "rain", ru: "дождь", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "right", ru: "право", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "restaurant", ru: "ресторан", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "report", ru: "отчёт", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "room", ru: "комната", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "soup", ru: "суп", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "spoon", ru: "ложка", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "student", ru: "студент", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "school", ru: "школа", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "shop", ru: "магазин", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "song", ru: "песня", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "shower", ru: "душ", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "street", ry: "улица", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "sports", ru: "спорт", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "sound", ru: "звук", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "sick", ru: "больной", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "study", ru: "учёба", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "tea", ru: "чай", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "translator", ru: "переводчик", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "table", ru: "стол", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "teacher", ru: "учитель", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "ticket", ru: "билет", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "time", ru: "время", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "taxi", ru: "такси", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "TV", ru: "телевизор", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "town", ru: "городок", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "task", ru: "задача", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "tired", ru: "уставший", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "truth", ru: "правда", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "vegetables", ru: "овощи", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "vacation", ru: "отпуск", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "water", ru: "вода", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "wallet", ru: "кошелёк", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "work", ru: "работа", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "week", ru: "неделя", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "waiting", ru: "ожидающий", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, {
-          en: "window", ru: "окно", topic: "nouns", weight: 5, shown: 0, errors: 0, hints: 0, }, 
-    ];
-
-      let topics = [
-        "all", "verbs", "nouns", "greetings", "introduction", "shopping","everyday","food", ];
-
-      let current = null;
-
-      let state = {
-        id: "game", score: 0, currentTopicIndex: 0, lastWord: null, };
-
-      // ВЫБОР СЛОВА (с весом)
-
-      function getCurrentWords() {
-        if (currentTopic === "all") {
-          return words;
-        }
-
-        return words.filter((word) => word.topic === currentTopic);
-      }
-
-      // --------------------
-      // ВАРИАНТЫ
-      // --------------------
-      function getOptions(correct) {
-        let options = [correct];
-
-        while (options.length < 5) {
-          let currentWords = getCurrentWords();
-          let r =
-            currentWords[Math.floor(Math.random() * currentWords.length)].ru;
-          if (!options.includes(r)) options.push(r);
-        }
-
-        return options.sort(() => Math.random() - 0.5);
-      }
-
-      function nextTopic() {
-        state.currentTopicIndex++;
-
-        if (state.currentTopicIndex >= topics.length) {
-          state.currentTopicIndex = 0;
-        }
-        saveState();
-
-        console.log("Тема:", getCurrentTopic());
-        show();
-      }
-      
-      function getTopicName() {
-        let currentTopic = getCurrentTopic();
-
-        switch (currentTopic) {
-
-          case "shopping":
-            return "🛒 Покупки";
-
-          case "food":
-            return "🍕 еда";
-
-          case "introduction":
-            return " 🤝 Знакомства";
-
-          case "greetings":
-            return "👋 Приветствие";
-
-          case "everyday":
-            return "💬Ежедневно";
-
-          case "verbs":
-            return "⚡ Глаголы A1";
-
-          case "nouns":
-            return "📦 Существительные";
-
-          default:
-            return "📚 Все слова";
-        }
-      }
-      let hintUsed = false;
-
-      function showHint() {
-        hintUsed = true;
-        current.hints++;
-        saveWord(current);
-        let hint = document.getElementById("hint");
-
-        if (current.example) {
-          hint.innerHTML = current.example;
-        } else if (current.ru) {
-          hint.innerHTML = current.ru;
-        } else {
-          hint.innerHTML = "Подсказка отсутствует";
-        }
-      }
-
-      // --------------------
-      // ПОКАЗ
-      // --------------------
-
-      function show() {
-        hintUsed = false;
-        current = getWord();
-
-        if (!current) {
-          return;
-        }
-        document.getElementById("hint").innerHTML = "";
-
-        current.shown++;
-        saveWord(current);
-        state.lastWord = current.en;
-        saveState();
-
-        document.getElementById("word").innerText = current.en;
-        document.getElementById("topicLabel").innerText = getTopicName();
-        // ❗ ВАЖНО: НЕ трогаем кнопки speak и "я знаю"
-        let box = document.getElementById("options");
-        box.innerHTML = "";
-
-        // ⏱ сначала озвучка
-        speak();
-
-        // ⏱ потом задержка перед вариантами
-        setTimeout(() => {
-          let options = getOptions(current.ru);
-
-          box.innerHTML = "";
-
-          options.forEach((opt) => {
-            let b = document.createElement("button");
-            b.className = "btn";
-            b.innerText = opt;
-
-            b.onclick = () => check(opt, b);
-
-            box.appendChild(b);
-          });
-        }, 3000); // 3.0 сек после озвучки
-      }
-      function saveWord(word) {
-        let tx = db.transaction("words", "readwrite");
-        tx.objectStore("words").put(word);
-      }
-      function saveState() {
-        if (!db) return;
-
-        let tx = db.transaction("state", "readwrite");
-        tx.objectStore("state").put(state);
-      }
-      function getWord() {
-        let sourceWords = getCurrentWords();
-        const unseen = sourceWords.filter((w) => (w.shown || 0) === 0);
-        if (unseen.length > 0) {
-          return unseen[Math.floor(Math.random() * unseen.length)];
-        }
-
-        if (sourceWords.length === 0) {
-          return null;
-        }
-
-        let pool = [];
-
-        sourceWords.forEach((w) => {
-          for (let i = 0; i < w.weight; i++) {
-            pool.push(w);
-          }
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>notebook</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f5f5f5;
+    margin:0;
+    padding:15px;
+}
+
+.container{
+    max-width:500px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+#currentTopic{
+    text-align:center;
+    margin:20px 0;
+    color:#333;
+}
+
+.form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+input,
+select,
+button{
+    width:100%;
+    box-sizing:border-box;
+    padding:12px;
+    font-size:16px;
+    border-radius:10px;
+    border:1px solid #ccc;
+}
+
+button{
+    background:#1976d2;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+button:active{
+    transform:scale(0.98);
+}
+
+#cards{
+    margin-top:20px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.card{
+    position:relative;
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    box-shadow:0 2px 6px rgba(0,0,0,.12);
+    cursor:pointer;
+}
+
+.card:active{
+    transform:scale(0.98);
+}
+
+.word{
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.translation{
+    font-size:18px;
+    color:#555;
+}
+
+.delete-btn{
+    position:absolute;
+    top:8px;
+    right:8px;
+    width:28px;
+    height:28px;
+    border:none;
+    background:none;
+    color:#c62828;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
+    padding:0;
+}
+
+.delete-btn:hover{
+    background:none;
+}
+
+@media (max-width:600px){
+
+    body{
+        padding:10px;
+    }
+
+    .word{
+        font-size:20px;
+    }
+
+    .translation{
+        font-size:16px;
+    }
+ }
+   .actions{
+        display:flex;
+        gap:10px;
+        margin-top:10px;
+ }
+   #topic{
+       flex:1;
+ }
+   #addBtn{
+       flex:0 0 70px;
+  }
+.input-row{
+    display:flex;
+    gap:8px;
+    margin-bottom:10px;
+}
+
+.input-row input{
+    flex:1;
+}
+
+.input-row button{
+    flex:0 0 70px;
+}
+
+</style>
+</head>
+<body>
+<div class="container">
+
+    <h1>Personal dictionary</h1>
+
+    <div class="form">
+
+        <div class="input-row">
+
+    <input
+        id="leftWord"
+        placeholder="Word">
+
+    <button
+        id="lang1Btn"
+        type="button">
+        RU
+    </button>
+
+</div>
+
+        <div class="input-row">
+
+    <input
+        id="rightWord"
+        placeholder="Word">
+
+    <button
+        id="lang2Btn"
+        type="button">
+        EN
+    </button>
+
+</div>
+    <div class="actions">
+        <select id="topic">
+            <option>Home</option>
+            <option>Work</option>
+            <option>Transport</option>
+            <option>Hospital</option>
+            <option>Food</option>
+            <option>Buy</option>
+        </select>
+
+        <button id="addBtn">
+            Add
+        </button>
+
+  </div>
+
+     <div id="cards"></div>
+  </div>
+
+
+<script>
+
+let db;
+
+let lang1Index =
+    Number(
+        localStorage.getItem("lang1Index")
+    );
+
+let lang2Index =
+    Number(
+        localStorage.getItem("lang2Index")
+    );
+
+if (isNaN(lang1Index)) {
+    lang1Index = 1; // RU
+}
+
+if (isNaN(lang2Index)) {
+    lang2Index = 0; // EN
+}
+let currentTopic = "Home";
+const languages = [
+    {
+        name: "English",
+        code: "en-US",
+        short: "EN"
+    },
+    {
+        name: "Russian",
+        code: "ru-RU",
+        short: "RU"
+    },
+    {
+        name: "Ukrainian",
+        code: "uk-UA",
+        short: "UA"
+    },
+    {
+        name: "Spanish",
+        code: "es-ES",
+        short: "ES"
+    },
+    {
+        name: "French",
+        code: "fr-FR",
+        short: "FR"
+    }
+];
+
+const request = indexedDB.open("EnglishNotebook", 1);
+
+request.onupgradeneeded = function(event) {
+
+    db = event.target.result;
+
+    if (!db.objectStoreNames.contains("words")) {
+
+        const store = db.createObjectStore("words", {
+            keyPath: "id",
+            autoIncrement: true
         });
 
-        let selected;
-
-        do {
-          selected = pool[Math.floor(Math.random() * pool.length)];
-        } while (pool.length > 1 && selected.en === state.lastWord);
-
-        state.lastWord = selected.en;
-
-        saveState();
-
-        return selected;
-      }
-      function loadState() {
-        let tx = db.transaction("state", "readonly");
-
-        let req = tx.objectStore("state").get("game");
-
-        req.onsuccess = function () {
-          if (req.result) {
-            state = req.result;
-          } else {
-            saveState();
-          }
-
-          // 🔥 ОБЯЗАТЕЛЬНО обновляем интерфейс
-          document.getElementById("score").innerText = state.score || 0;
-
-          document.getElementById("topicLabel").innerText = getTopicName();
-
-          loadOrCreateWords();
-        };
-      }
-
-      function getCurrentWords() {
-        let currentTopic = getCurrentTopic();
-
-        if (currentTopic === "all") {
-          return words;
-        }
-
-        return words.filter((word) => word.topic === currentTopic);
-      }
-      function getCurrentTopic() {
-        return topics[state.currentTopicIndex];
-      }
-      // --------------------
-      // ПРОВЕРКА
-      // --------------------
-      function check(answer, button) {
-        let isCorrect = answer === current.ru;
-
-        if (isCorrect) {
-          state.score++;
-
-          if (!hintUsed) {
-            current.weight = Math.max(1, current.weight - 1);
-          }
-
-          saveState();
-          saveWord(current);
-
-          button.classList.add("correct");
-        } else {
-          current.errors++; // ← добавить
-
-          current.weight = Math.min(10, current.weight + 1);
-
-          button.classList.add("wrong");
-
-          saveWord(current);
-        }
-
-        document.getElementById("score").innerText = state.score;
-
-        document.querySelectorAll("#options .btn").forEach((b) => {
-          b.disabled = true;
+        store.createIndex("topic", "topic", {
+            unique: false
         });
+    }
+};
 
-        document.querySelectorAll("#options .btn").forEach((b) => {
-          if (b.innerText === current.ru) {
-            b.classList.add("correct");
-          }
+request.onsuccess = function(event) {
+
+    db = event.target.result;
+
+    showWords(currentTopic);
+};
+
+request.onerror = function(error) {
+    console.error("IndexedDB error:", error);
+};
+
+document
+.getElementById("addBtn")
+.addEventListener("click", addWord);
+document
+.getElementById("lang1Btn")
+.textContent =
+languages[lang1Index].short;
+
+document
+.getElementById("lang2Btn")
+.textContent =
+languages[lang2Index].short;
+document
+.getElementById("topic")
+.addEventListener("change", function() {
+
+    currentTopic = this.value;
+
+    showWords(currentTopic);
+});
+
+ 
+
+function addWord() {
+
+    const left =
+        document.getElementById("leftWord")
+        .value
+        .trim();
+
+    const right =
+        document.getElementById("rightWord")
+        .value
+        .trim();
+
+    const topic =
+        document.getElementById("topic")
+        .value;
+
+    if (!left || !right) return;
+
+    const tx =
+        db.transaction(
+            "words",
+            "readwrite"
+        );
+
+    const store =
+        tx.objectStore("words");
+
+    store.add({
+        left,
+        right,
+        topic,
+        lang1: languages[lang1Index].code,
+        lang2: languages[lang2Index].code
+    });
+
+    tx.oncomplete = () => {
+
+        document.getElementById("leftWord").value = "";
+        document.getElementById("rightWord").value = "";
+
+        document.getElementById("leftWord").focus();
+
+        showWords(currentTopic);
+    };
+}
+
+function showWords(topic) {
+
+    const tx =
+        db.transaction(
+            "words",
+            "readonly"
+        );
+
+    const store =
+        tx.objectStore("words");
+
+    const req =
+        store.getAll();
+
+    req.onsuccess = function() {
+
+        const cards =
+            document.getElementById("cards");
+
+        cards.innerHTML = "";
+
+        const currentLang1 =
+            languages[lang1Index].code;
+
+        const currentLang2 =
+            languages[lang2Index].code;
+
+        const words = req.result.filter(word =>
+            word.topic === topic &&
+            word.lang1 === currentLang1 &&
+            word.lang2 === currentLang2
+    );
+
+        words.forEach(item => {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "card";
+
+            card.innerHTML = `
+                <button
+                    class="delete-btn"
+                    title="Удалить">
+                    ✕
+                </button>
+
+                <div class="word">
+                    ${item.right}
+                </div>
+
+                <div class="translation">
+                    ${item.left}
+                </div>
+            `;
+
+           card.addEventListener(
+                "click",
+                () => speak(
+                    item.right,
+                    item.lang2
+            )
+        );
+
+            card.querySelector(
+                ".delete-btn"
+            ).addEventListener(
+                "click",
+                (e) => {
+
+                    e.stopPropagation();
+
+                    deleteWord(item.id);
+                }
+            );
+
+            cards.appendChild(card);
         });
+    };
+}
 
-        setTimeout(show, 2200);
-      }
+function deleteWord(id) {
 
-      // --------------------
-      // АУДИО
-      // --------------------
-      function speak() {
-        const utterance = new SpeechSynthesisUtterance(current.en);
+    const tx =
+        db.transaction(
+            "words",
+            "readwrite"
+        );
 
-        utterance.lang = "en-US";
-        utterance.rate = 0.9;
-        utterance.volume = 1;
-        const voices = speechSynthesis.getVoices();
+    const store =
+        tx.objectStore("words");
 
-        const englishVoice = voices.find((v) => v.lang.includes("en"));
+    store.delete(id);
 
-        if (englishVoice) {
-          utterance.voice = englishVoice;
-        }
+    tx.oncomplete = () => {
 
-        speechSynthesis.speak(utterance);
-      }
+        showWords(currentTopic);
+    };
+}
 
-      function initDB() {
-        let request = indexedDB.open("EnglishCardsDB", 1);
+function speak(text, lang) {
 
-        request.onupgradeneeded = function (event) {
-          db = event.target.result;
+    speechSynthesis.cancel();
 
-          if (!db.objectStoreNames.contains("words")) {
-            db.createObjectStore("words", { keyPath: "en" });
-          }
-          if (!db.objectStoreNames.contains("state")) {
-            db.createObjectStore("state", { keyPath: "id" });
-          }
-        };
+    const utterance =
+        new SpeechSynthesisUtterance(text);
 
-        request.onsuccess = function (e) {
-          db = e.target.result;
+    utterance.lang = lang;
+    utterance.rate = 0.9;
 
-          //console.log("Stores:", Array.from(db.objectStoreNames));
+    speechSynthesis.speak(
+        utterance
+    );
+}
+// Выбор темы
+document
+.getElementById("topic")
+.addEventListener("change", function() {
 
-          loadState();
-          loadOrCreateWords();
-        };
+    currentTopic = this.value;
 
-        request.onerror = function () {
-          console.log("Ошибка открытия БД");
-        };
-      }
-      function loadOrCreateWords() {
-        let tx = db.transaction("words", "readonly");
-        let store = tx.objectStore("words");
+    showWords(currentTopic);
+});
 
-        let request = store.getAll();
 
-        request.onsuccess = function () {
-          if (request.result.length === 0) {
-            saveInitialWords();
-          } else {
-            words = request.result;
+// Переключение языка 1
 
-            show();
-          }
-        };
-      }
-      function saveInitialWords() {
-        let tx = db.transaction("words", "readwrite");
-        let store = tx.objectStore("words");
+document
+.getElementById("lang1Btn")
+.addEventListener("click", () => {
 
-        words.forEach((word) => {
-          store.put(word);
-        });
+    lang1Index++;
 
-        tx.oncomplete = function () {
-          show();
-        };
-      }
+    if (lang1Index >= languages.length) {
+        lang1Index = 0;
+    }
 
-      // старт
-      function showDiagnostics() {
-        let currentWords = getCurrentWords();
+    document
+        .getElementById("lang1Btn")
+        .textContent =
+        languages[lang1Index].short;
 
-        let totalShown = currentWords.filter((w) => w.shown > 0).length;
-        let neverShown = currentWords.filter((w) => w.shown === 0).length;
+    localStorage.setItem(
+        "lang1Index",
+        lang1Index
+    );
 
-        let html = "";
+    showWords(currentTopic);
+});
 
-        html += "<h2>Диагностика</h2>";
+// Переключение языка 2
 
-        html += "<p>";
-        html += "Тема: " + getTopicName() + "<br/>";
-        html += "Уникальных слов показано: " + totalShown + "<br/>";
-        html += "Не показано ни разу: " + neverShown;
-        html += "</p>";
+document
+.getElementById("lang2Btn")
+.addEventListener("click", () => {
 
-        html += '<table border="1" cellpadding="5">';
+    lang2Index++;
 
-        html += "<tr>";
-        html += "<th>EN</th>";
-        html += "<th>RU</th>";
-        html += "<th>Вес</th>";
-        html += "<th>Показов</th>";
-        html += "<th>Ошибок</th>";
-        html += "<th>Верно</th>";
-        html += "</tr>";
+    if (lang2Index >= languages.length) {
+        lang2Index = 0;
+    }
 
-        currentWords.forEach(function (w) {
-          let success = w.shown - w.errors;
+    document
+        .getElementById("lang2Btn")
+        .textContent =
+        languages[lang2Index].short;
 
-          html += "<tr>";
-          html += "<td>" + w.en + "</td>";
-          html += "<td>" + w.ru + "</td>";
-          html += "<td>" + w.weight + "</td>";
-          html += "<td>" + w.shown + "</td>";
-          html += "<td>" + w.errors + "</td>";
-          html += "<td>" + success + "</td>";
-          html += "</tr>";
-        });
+    localStorage.setItem(
+        "lang2Index",
+        lang2Index
+    );
 
-        html += "</table>";
+    showWords(currentTopic);
+});
 
-        let win = window.open("", "_blank");
 
-        win.document.write(
-          "<html><head><title>Диагностика</title></head><body>", );
-        win.document.write(html);
-        win.document.write("</body></html>");
-      }
-      initDB();
-    </script>
-  </body>
+</script>
+
+</body>
 </html>
-
-
 
 
 
