@@ -158,7 +158,19 @@ button:active{
 .input-row button{
     flex:0 0 70px;
 }
+#backupPanel{
+    margin-top:20px;
+}
 
+.backup-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+}
+
+.backup-buttons button{
+    flex:1;
+}
 </style>
 </head>
 <body>
@@ -212,7 +224,25 @@ button:active{
   </div>
  </div>
      <div id="cards"></div>
- 
+ <details id="backupPanel">
+
+    <summary>
+        Backup & Restore
+    </summary>
+
+    <div class="backup-buttons">
+
+        <button id="exportBtn">
+            Export
+        </button>
+
+        <button id="importBtn">
+            Import
+        </button>
+
+    </div>
+
+</details>
  </div>
 <script>
 
