@@ -468,7 +468,6 @@ function deleteWord(id) {
         showWords(currentTopic);
     };
 }
-
 function speak(text, lang) {
 
     speechSynthesis.cancel();
@@ -478,10 +477,41 @@ function speak(text, lang) {
 
     utterance.lang = lang;
     utterance.rate = 0.9;
+    utterance.volume = 1;
 
-    speechSynthesis.speak(
-        utterance
-    );
+    const voices =
+        speechSynthesis.getVoices();
+
+    let voice = null;
+
+    if (lang.startsWith("en")) {
+        voice =
+            voices.find(v => v.name === "Samantha") ||
+            voices.find(v => v.name === "Daniel") ||
+            voices.find(v => v.lang === "en-US") ||
+            voices.find(v => v.lang.startsWith("en"));
+    }
+
+    if (lang.startsWith("es")) {
+        voice =
+            voices.find(v => v.lang === "es-ES");
+    }
+
+    if (lang.startsWith("fr")) {
+        voice =
+            voices.find(v => v.lang === "fr-FR");
+    }
+
+    if (lang.startsWith("uk")) {
+        voice =
+            voices.find(v => v.lang === "uk-UA");
+    }
+
+    if (voice) {
+        utterance.voice = voice;
+    }
+
+    speechSynthesis.speak(utterance);
 }
 // Выбор темы
 document
