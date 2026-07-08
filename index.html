@@ -717,6 +717,12 @@ function exportData() {
         URL.revokeObjectURL(url);
     };
 }
+ document
+.getElementById("importFile")
+.addEventListener(
+    "change",
+    importData
+);
 </script>
 <script>
 if("serviceWorker" in navigator){
