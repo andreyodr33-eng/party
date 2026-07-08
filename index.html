@@ -338,7 +338,16 @@ document
     "click",
     exportData
 );
- 
+document
+.getElementById("importBtn")
+.addEventListener(
+    "click",
+    () => {
+        document
+            .getElementById("importFile")
+            .click();
+    }
+); 
 document
 .getElementById("lang1Btn")
 .textContent =
