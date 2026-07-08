@@ -619,7 +619,58 @@ document
     showWords(currentTopic);
 });
 
+function exportData() {
 
+    const tx =
+        db.transaction(
+            "words",
+            "readonly"
+        );
+
+    const store =
+        tx.objectStore("words");
+
+    const req =
+        store.getAll();
+
+    req.onsuccess = () => {
+
+        const data = {
+            words: req.result
+        };
+
+        const json =
+            JSON.stringify(
+                data,
+                null,
+                2
+            );
+
+        const blob =
+            new Blob(
+                [json],
+                {
+                    type:
+                    "application/json"
+                }
+            );
+
+        const url =
+            URL.createObjectURL(blob);
+
+        const a =
+            document.createElement("a");
+
+        a.href = url;
+
+        a.download =
+            "dictionary-backup.json";
+
+        a.click();
+
+        URL.revokeObjectURL(url);
+    };
+}
 </script>
 <script>
 if("serviceWorker" in navigator){
