@@ -639,7 +639,32 @@ document
 
     showWords(currentTopic);
 });
+function importData(event) {
 
+    const file =
+        event.target.files[0];
+
+    if (!file) return;
+
+    const reader =
+        new FileReader();
+
+    reader.onload = function(e) {
+
+        const data =
+            JSON.parse(
+                e.target.result
+            );
+
+        console.log(data);
+
+        alert(
+            "JSON file loaded successfully"
+        );
+    };
+
+    reader.readAsText(file);
+}
 function exportData() {
 
     const tx =
