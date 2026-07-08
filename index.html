@@ -656,15 +656,35 @@ function importData(event) {
                 e.target.result
             );
 
-        console.log(data);
+        const tx =
+            db.transaction(
+                "words",
+                "readwrite"
+            );
 
-        alert(
-            "JSON file loaded successfully"
-        );
+        const store =
+            tx.objectStore("words");
+
+        data.words.forEach(word => {
+
+            delete word.id;
+
+            store.add(word);
+        });
+
+        tx.oncomplete = () => {
+
+            showWords(currentTopic);
+
+            alert(
+                "Import completed"
+            );
+        };
     };
 
     reader.readAsText(file);
 }
+        
 function exportData() {
 
     const tx =
