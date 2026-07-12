@@ -19,11 +19,13 @@ body{
 .container{
     max-width:500px;
     margin:auto;
-    height:100%;
+    height:calc(100vh - 30px);
     display:flex;
     flex-direction:column;
 }
-
+.top-panel{
+    flex-shrink:0;
+}   
 h1{
     text-align:center;
     margin-bottom:20px;
