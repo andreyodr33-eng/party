@@ -657,11 +657,58 @@ function speak(text, lang) {
 
     utterance.lang = lang;
     utterance.rate = 0.9;
+    utterance.volume = 1;
+
+    const voices =
+        speechSynthesis.getVoices();
+
+    let voice = null;
+
+    if (lang.startsWith("en")) {
+        voice =
+            voices.find(v =>
+                v.lang.includes("en")
+            );
+    }
+
+    else if (lang.startsWith("es")) {
+        voice =
+            voices.find(v =>
+                v.lang.includes("es")
+            );
+    }
+
+    else if (lang.startsWith("fr")) {
+        voice =
+            voices.find(v =>
+                v.lang.includes("fr")
+            );
+    }
+
+    else if (lang.startsWith("uk")) {
+        voice =
+            voices.find(v =>
+                v.lang.includes("uk")
+            );
+    }
+
+    else if (lang.startsWith("ru")) {
+        voice =
+            voices.find(v =>
+                v.lang.includes("ru")
+            );
+    }
+
+    if (voice) {
+        utterance.voice = voice;
+    }
 
     speechSynthesis.speak(
         utterance
     );
 }
+ 
+
 // Выбор темы
 document
 .getElementById("topic")
