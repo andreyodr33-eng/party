@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>notebook</title>
- <link rel="manifest" href="manifest.json" />
+<link rel="manifest" href="manifest.json" />
 <style>
 
 body{
@@ -19,13 +19,10 @@ body{
 .container{
     max-width:500px;
     margin:auto;
-    height:calc(100vh - 30px);
+    height:100%;
     display:flex;
     flex-direction:column;
 }
-.top-panel{
-    flex-shrink:0;
-}    
 
 h1{
     text-align:center;
@@ -68,14 +65,17 @@ button:active{
 
 #cards{
     margin-top:20px;
-    min-height:0;
     display:flex;
     flex-direction:column;
     gap:12px;
+
     flex:1;
     overflow-y:auto;
     padding-bottom:20px;
 }
+ .top-panel{
+    flex-shrink:0;
+ }
 
 .card{
     position:relative;
@@ -84,23 +84,22 @@ button:active{
     border-radius:12px;
     box-shadow:0 2px 6px rgba(0,0,0,.12);
     cursor:pointer;
-}
-
+    touch-action: pan-y;
+ }
 .card:hover {
      background: #fff59d;
      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }   
-
 .word{
-    font-size:22px;
+    font-size:20px;
     font-weight:bold;
     margin-bottom:8px;
-    color:#0d47a1;
+    color:#1976d2;
 }
 
 .translation{
     font-size:18px;
-    color:black;
+     color:black;
 }
 
 .delete-btn{
@@ -112,16 +111,20 @@ button:active{
     border:none;
     background:none;
     color:#c62828;
-    font-size:20px;
-    font-weight:bold;
+    font-size:18px;
     cursor:pointer;
     padding:0;
-    color:#dc3545;
+
+    opacity:0;
+    transition:opacity 0.2s;
+}
+.card:hover .delete-btn{
+    opacity:1;
 }
 
 .delete-btn:hover{
     background:none;
-  
+    
 }
 
 @media (max-width:600px){
@@ -132,10 +135,13 @@ button:active{
 
     .word{
         font-size:20px;
+        font-weight:bold;
+        color:#1976d2;
     }
 
     .translation{
-        font-size:16px;
+        font-size:20px;
+       
     }
  }
    .actions{
@@ -162,6 +168,17 @@ button:active{
 .input-row button{
     flex:0 0 70px;
 }
+.card-text{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:8px;
+    padding-right:30px;
+}
+.separator{
+    font-size:20px;
+    color:#999;
+ }
 #backupPanel{
     margin-top:20px;
 }
@@ -175,15 +192,66 @@ button:active{
 .backup-buttons button{
     flex:1;
 }
+.support-modal{
+
+    display:none;
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,.6);
+
+    z-index:9999;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.support-box{
+
+    background:white;
+
+    padding:20px;
+
+    border-radius:12px;
+
+    max-width:320px;
+
+    text-align:center;
+
+}
+
+.support-box button{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+}
+ 
 </style>
 </head>
 <body>
-<div class="container">
- <div class="top-panel">
- <!--   <h1>Personal dictionary</h1> -->
 
-    <div class="form">
-    </div>
+<div class="container">
+  <div class="top-panel">
+  <div class="form">
+  </div>
         <div class="input-row">
 
     <input
@@ -229,7 +297,8 @@ button:active{
   </div>
  </div>
      <div id="cards"></div>
- <details id="backupPanel">
+
+     <details id="backupPanel">
 
     <summary>
         Backup & Restore
@@ -244,16 +313,26 @@ button:active{
         <button id="importBtn">
             Import
         </button>
-         <input 
+
+        <input 
            type="file"
            id="importFile"
            accept=".json"
            style="display:none">
+
     </div>
 
 </details>
- </div>
+ 
+</div>
+
 <script>
+if (!localStorage.getItem("installDate")) {
+    localStorage.setItem(
+        "installDate",
+        Date.now()
+    );
+}
 
 let db;
 
@@ -274,7 +353,9 @@ if (isNaN(lang1Index)) {
 if (isNaN(lang2Index)) {
     lang2Index = 0; // EN
 }
-let currentTopic = "Home";
+let currentTopic = 
+    localStorage.getItem("currentTopic")
+    ||"Home";
 const languages = [
     {
         name: "English",
@@ -287,9 +368,9 @@ const languages = [
         short: "RU"
     },
     {
-        name: "Portuguese",
-        code: "pt-PT",
-        short: "PT"
+        name: "Ukrainian",
+        code: "uk-UA",
+        short: "UA"
     },
     {
         name: "Spanish",
@@ -326,9 +407,9 @@ request.onsuccess = function(event) {
 
     db = event.target.result;
 
-     document.getElementById("topic").value =
+    document.getElementById("topic").value =
          currentTopic;
-   
+
     showWords(currentTopic);
 };
 
@@ -340,7 +421,7 @@ document
 .getElementById("addBtn")
 .addEventListener("click", addWord);
 
- document
+document
 .getElementById("exportBtn")
 .addEventListener(
     "click",
@@ -355,7 +436,8 @@ document
             .getElementById("importFile")
             .click();
     }
-); 
+);
+
 document
 .getElementById("lang1Btn")
 .textContent =
@@ -460,28 +542,66 @@ function showWords(topic) {
             const card =
                 document.createElement("div");
 
+            let start = 0;
+            let currentX = 0;
+
+            card.addEventListener(
+            "touchstart",
+            (e)=>{
+
+            startX =
+            e.touches[0].clientX;
+
+        }
+      );
+           card.addEventListener(
+          "touchmove",
+           (e)=>{
+
+           currentX =
+            e.touches[0].clientX;
+
+           let deltaX =
+                currentX - startX;
+                if (deltaX < 0) {
+                card.style.transform =
+                    `translateX(${deltaX}px)`;
+           }
+
+        }
+     );
+          card.addEventListener(
+          "touchend",
+         ()=>{
+
+           card.style.transform =
+               "translateX(0px)";
+            
+         }
+     );
+
             card.className = "card";
 
             card.innerHTML = `
                 <button
                     class="delete-btn"
                     title="Удалить">
-                    ✕
+                    &#128465;&#65039;
                 </button>
 
                 <div class="card-text">
-                   <span class="word">
-                       ${item.right}
-                </span>
+                  <span class="word">
+                      ${item.right}
+                  </span>
 
                 <span class="separator">
-                  —
+                    —
                 </span>
 
                 <span class="translation">
-                     ${item.left}
-               </span>
-          </div>
+                    ${item.left}
+                </span>
+           </div>
             `;
 
            card.addEventListener(
@@ -527,6 +647,7 @@ function deleteWord(id) {
         showWords(currentTopic);
     };
 }
+
 function speak(text, lang) {
 
     speechSynthesis.cancel();
@@ -536,64 +657,19 @@ function speak(text, lang) {
 
     utterance.lang = lang;
     utterance.rate = 0.9;
-    utterance.volume = 1;
-
-    const voices =
-        speechSynthesis.getVoices();
-
-    let voice = null;
-
-    if (lang.startsWith("en")) {
-        voice =
-            voices.find(v =>
-                v.lang.includes("en")
-            );
-    }
-
-    else if (lang.startsWith("es")) {
-        voice =
-            voices.find(v =>
-                v.lang.includes("es")
-            );
-    }
-
-    else if (lang.startsWith("fr")) {
-        voice =
-            voices.find(v =>
-                v.lang.includes("fr")
-            );
-    }
-
-    else if (lang.startsWith("uk")) {
-        voice =
-            voices.find(v =>
-                v.lang.includes("uk")
-            );
-    }
-
-    else if (lang.startsWith("ru")) {
-        voice =
-            voices.find(v =>
-                v.lang.includes("ru")
-            );
-    }
-
-    if (voice) {
-        utterance.voice = voice;
-    }
 
     speechSynthesis.speak(
         utterance
     );
 }
- 
 // Выбор темы
 document
 .getElementById("topic")
 .addEventListener("change", function() {
 
     currentTopic = this.value;
- localStorage.setItem(
+
+    localStorage.setItem(
         "currentTopic",
         currentTopic 
  );
@@ -650,6 +726,7 @@ document
 
     showWords(currentTopic);
 });
+
 function importData(event) {
 
     const file =
@@ -695,7 +772,7 @@ function importData(event) {
 
     reader.readAsText(file);
 }
-        
+
 function exportData() {
 
     const tx =
@@ -748,22 +825,98 @@ function exportData() {
         URL.revokeObjectURL(url);
     };
 }
- document
+
+document
 .getElementById("importFile")
 .addEventListener(
     "change",
     importData
 );
-</script>
-<script>
-if("serviceWorker" in navigator){
+function shouldShowSupportPopup() {
 
-navigator.serviceWorker.register("./service-worker.js")
-.then(()=>console.log("SW registered"));
-navigator.serviceWorker.addEventListener('controllerchange', () => {
-  window.location.reload();
-});
+    if (localStorage.getItem("supporter") === "true") {
+        return false;
+    }
+
+    const installDate =
+        Number(localStorage.getItem("installDate"));
+
+    const month = 
+    30 * 24 * 60 * 60 * 1000;
+    
+
+    return (
+        Date.now() - installDate
+    ) > month;
 }
- </script>
+
+function showSupportPopup(){
+
+    document
+    .getElementById("supportModal")
+    .style.display = "flex";
+
+}
+ 
+window.addEventListener(
+    "load",
+    () => {
+
+        if (
+            shouldShowSupportPopup()
+        ) {
+            showSupportPopup();
+        }
+
+    }
+);
+window.addEventListener("load", () => {
+document
+.getElementById("continueBtn")
+.addEventListener("click",()=>{
+
+    document
+    .getElementById("supportModal")
+    .style.display = "none";
+
+});
+document
+.getElementById("supportBtn")
+.addEventListener("click",()=>{
+
+    window.open(
+        "https://send.monobank.ua/jar/AaNZCRas5s",
+        "_blank"
+    );
+  });
+});
+
+</script>
+<div id="supportModal" class="support-modal">
+
+  <div class="support-box">
+
+    <h2>☕ Support Project</h2>
+
+    <p>
+      ❤️ Notebook works completely offline.
+    </p>
+
+    <p>
+      If you like this app,<br>
+      you can support future development.
+    </p>
+
+    <button id="supportBtn">
+      Support NoteBook
+    </button>
+
+    <button id="continueBtn">
+      Continue Free
+    </button>
+
+  </div>
+
+</div>
 </body>
 </html>
