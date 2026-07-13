@@ -354,6 +354,7 @@ button:active{
 </div>
 
 <script>
+let insertBelowId = null;    
 if (!localStorage.getItem("installDate")) {
     localStorage.setItem(
         "installDate",
@@ -728,7 +729,7 @@ function showWords(topic) {
                (e)=>{
 
                   e.stopPropagation();
-
+                  insertBelowId = item.id;
                    alert(
                        "Insert Below"
         );
