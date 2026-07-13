@@ -528,15 +528,32 @@ function addWord() {
 
     });
 
-    store.add({
-        left,
-        right,
-        topic,
-        lang1: languages[lang1Index].code,
-        lang2: languages[lang2Index].code,
+    let newOrder;
 
-        order: maxOrder + 100
-    });
+if (insertBelowOrder !== null) {
+
+    newOrder =
+        insertBelowOrder + 50;
+
+} else {
+
+    newOrder =
+        maxOrder + 100;
+
+}
+
+store.add({
+    left,
+    right,
+    topic,
+    lang1: languages[lang1Index].code,
+    lang2: languages[lang2Index].code,
+
+    order: newOrder
+});
+
+insertBelowId = null;
+insertBelowOrder = null;
 
 };
     
