@@ -569,6 +569,22 @@ function showWords(topic) {
                 if (deltaX < 0) {
                 card.style.transform =
                     `translateX(${deltaX}px)`;
+                const deleteBtn =
+                   card.querySelector(
+                       ".delete-btn"
+                 );
+
+          if (deltaX < -80) {
+
+             deleteBtn.style.opacity =
+                 "1";
+
+         } else {
+
+            deleteBtn.style.opacity =
+                 "0";
+
+              }    
            }
 
         }
