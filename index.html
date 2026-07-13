@@ -512,16 +512,34 @@ function addWord() {
 
     const store =
         tx.objectStore("words");
+    
+    store.getAll().onsuccess = (e) => {
+
+    const allWords = e.target.result;
+
+    let maxOrder = 0;
+
+    allWords.forEach(word => {
+
+        if (word.order && word.order > maxOrder) {
+            maxOrder = word.order;
+        }
+
+    });
 
     store.add({
         left,
         right,
         topic,
         lang1: languages[lang1Index].code,
-        lang2: languages[lang2Index].code
+        lang2: languages[lang2Index].code,
+
+        order: maxOrder + 100
     });
 
-    tx.oncomplete = () => {
+};
+    
+      tx.oncomplete = () => {
 
         document.getElementById("leftWord").value = "";
         document.getElementById("rightWord").value = "";
