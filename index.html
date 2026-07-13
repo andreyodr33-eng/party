@@ -574,6 +574,15 @@ function showWords(topic) {
         }
      );
           card.addEventListener(
+              "touchend",
+               ()=>{
+
+                 card.style.transform =
+                      "translateX(0px)";
+
+      }
+  );  
+          card.addEventListener(
           "touchend",
          ()=>{
 
