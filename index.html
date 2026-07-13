@@ -600,10 +600,18 @@ function showWords(topic) {
   );  
           card.addEventListener(
           "touchend",
-         ()=>{
+          ()=>{
 
            card.style.transform =
                "translateX(0px)";
+              
+            const deleteBtn =
+                 card.querySelector(
+                    ".delete-btn"
+               );
+
+            deleteBtn.style.opacity =
+               "0";   
             
          }
      );
