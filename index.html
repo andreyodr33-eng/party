@@ -591,15 +591,6 @@ function showWords(topic) {
 
         }
      );
-          card.addEventListener(
-              "touchend",
-               ()=>{
-
-                 card.style.transform =
-                      "translateX(0px)";
-
-      }
-  );  
             
         card.addEventListener(
         "touchend",
@@ -631,6 +622,32 @@ function showWords(topic) {
 
     }
 );
+          card.addEventListener(
+    "click",
+    (e)=>{
+
+        if (cardOpened) {
+
+            e.stopPropagation();
+
+            const deleteBtn =
+                card.querySelector(
+                    ".delete-btn"
+                );
+
+            card.style.transform =
+                "translateX(0px)";
+
+            deleteBtn.style.opacity =
+                "0";
+
+            cardOpened = false;
+
+            return;
+        }
+
+    }
+);  
 
             card.className = "card";
 
