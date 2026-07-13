@@ -582,6 +582,11 @@ function showWords(topic) {
             word.lang1 === currentLang1 &&
             word.lang2 === currentLang2
     );
+        words.sort(
+            (a,b)=>
+                (a.order || a.id) -
+                (b.order || b.id)
+     );        
 
         words.forEach(item => {
 
