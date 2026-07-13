@@ -721,7 +721,20 @@ function showWords(topic) {
                     deleteWord(item.id);
                 }
             );
+          card.querySelector(
+              ".menu-btn"
+          ).addEventListener(
+               "click",
+               (e)=>{
 
+                  e.stopPropagation();
+
+                   alert(
+                       "Insert Below"
+        );
+
+    }
+);
             cards.appendChild(card);
         });
     };
