@@ -354,7 +354,8 @@ button:active{
 </div>
 
 <script>
-let insertBelowId = null;    
+let insertBelowId = null; 
+let insertBelowIdOrder = null;   
 if (!localStorage.getItem("installDate")) {
     localStorage.setItem(
         "installDate",
@@ -753,6 +754,8 @@ function showWords(topic) {
 
                   e.stopPropagation();
                   insertBelowId = item.id;
+                  insertBelowIdOrder =
+                      item.order || item.id * 100;
                   document
                        .getElementById(
                            "leftWord"
