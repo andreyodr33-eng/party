@@ -444,9 +444,9 @@ const languages = [
         short: "RU"
     },
     {
-        name: "Ukrainian",
-        code: "uk-UA",
-        short: "UA"
+        name: "Portuguese",
+        code: "pt-PT",
+        short: "PT"
     },
     {
         name: "Spanish",
@@ -898,10 +898,10 @@ function speak(text, lang) {
             );
     }
 
-    else if (lang.startsWith("uk")) {
+    else if (lang.startsWith("pt")) {
         voice =
             voices.find(v =>
-                v.lang.includes("uk")
+                v.lang.includes("pt")
             );
     }
 
