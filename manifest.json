@@ -1,6 +1,6 @@
 {
   "name": "notebook",
-  "short_name": "EN ⇄ ES",
+  "short_name": "WordBook",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#ffffff",
