@@ -518,15 +518,23 @@ function addWord() {
 
     const allWords = e.target.result;
 
-    let maxOrder = 0;
+   let minOrder = 0;
 
     allWords.forEach(word => {
 
-        if (word.order && word.order > maxOrder) {
-            maxOrder = word.order;
-        }
+       const order =
+           word.order || word.id * 100;
 
-    });
+    if (
+        minOrder === 0 ||
+        order < minOrder
+    ) {
+
+        minOrder = order;
+
+    }
+
+});
 
     let newOrder;
 
@@ -538,7 +546,7 @@ if (insertBelowOrder !== null) {
 } else {
 
     newOrder =
-        maxOrder + 100;
+        minOrder - 100;
 
 }
 
