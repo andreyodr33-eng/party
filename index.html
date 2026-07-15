@@ -1162,7 +1162,26 @@ document
     )
     .style.display = "block";
  });  
-});    
+}); 
+ document
+.getElementById("supportedBtn")
+.addEventListener(
+    "click",
+    ()=>{
+
+        localStorage.setItem(
+            "supporter",
+            "true"
+        );
+
+        document
+        .getElementById(
+            "supportModal"
+        )
+        .style.display = "none";
+
+    }
+);   
 //ЗАСТАВКА    
 window.addEventListener(
     "load",
