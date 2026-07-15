@@ -691,8 +691,12 @@ function showWords(topic) {
            let deltaX =
                 currentX - startX;
                 if (deltaX < 0) {
+                if (deltaX < -100) {
+                    deltaX = -100;
+                }   
                 card.style.transform =
                     `translateX(${deltaX}px)`;
+                }    
                 const deleteBtn =
                    card.querySelector(
                        ".delete-btn"
