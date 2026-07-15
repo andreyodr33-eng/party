@@ -1140,7 +1140,7 @@ document
     .style.display = "none";
 
 });
-// Монетизация    
+// Монетизация
 document
 .getElementById("supportBtn")
 .addEventListener("click",()=>{
@@ -1149,8 +1149,20 @@ document
         "https://send.monobank.ua/jar/AaNZCRas5s",
         "_blank"
     );
-  });
-});
+
+    document
+    .getElementById(
+        "supportBtn"
+    )
+    .style.display = "none";
+
+    document
+    .getElementById(
+        "supportedBtn"
+    )
+    .style.display = "block";
+
+});    
 //ЗАСТАВКА    
 window.addEventListener(
     "load",
