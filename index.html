@@ -195,6 +195,7 @@ button:active{
 .backup-buttons button{
     flex:1;
 }
+/ * Монетизация * /    
 .support-modal{
 
     display:none;
@@ -1090,6 +1091,8 @@ document
     "change",
     importData
 );
+// Монетизация показ окна раз в месяц
+    
 function shouldShowSupportPopup() {
 
     if (localStorage.getItem("supporter") === "true") {
@@ -1107,7 +1110,7 @@ function shouldShowSupportPopup() {
         Date.now() - installDate
     ) > month;
 }
-
+// Монетизация
 function showSupportPopup(){
 
     document
@@ -1138,6 +1141,7 @@ document
     .style.display = "none";
 
 });
+// Монетизация    
 document
 .getElementById("supportBtn")
 .addEventListener("click",()=>{
@@ -1172,6 +1176,8 @@ window.addEventListener(
     }
 );
 </script>
+ // Монетизация
+    
 <div id="supportModal" class="support-modal">
 
   <div class="support-box">
@@ -1183,8 +1189,9 @@ window.addEventListener(
     </p>
 
     <p>
-      If you like this app,<br>
-      you can support future development.
+      Enjoying WordBook?<br>
+      You can buy me a coffee
+      I'd really appreciate it!  
     </p>
 
     <button id="supportBtn">
