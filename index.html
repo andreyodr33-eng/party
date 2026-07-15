@@ -1131,57 +1131,62 @@ window.addEventListener(
     }
 );
 window.addEventListener("load", () => {
-document
-.getElementById("continueBtn")
-.addEventListener("click",()=>{
 
     document
-    .getElementById("supportModal")
-    .style.display = "none";
+    .getElementById("continueBtn")
+    .addEventListener("click",()=>{
 
+        document
+        .getElementById("supportModal")
+        .style.display = "none";
 
-// Монетизация
-document
-.getElementById("supportBtn")
-.addEventListener("click",()=>{
-
-    window.open(
-        "https://send.monobank.ua/jar/AaNZCRas5s",
-        "_blank"
-    );
+    });
 
     document
-    .getElementById(
-        "supportBtn"
-    )
-    .style.display = "none";
+    .getElementById("supportBtn")
+    .addEventListener("click",()=>{
 
-    document
-    .getElementById(
-        "supportedBtn"
-    )
-    .style.display = "block";
- });  
-}); 
- document
-.getElementById("supportedBtn")
-.addEventListener(
-    "click",
-    ()=>{
-
-        localStorage.setItem(
-            "supporter",
-            "true"
+        window.open(
+            "https://send.monobank.ua/jar/AaNZCRas5s",
+            "_blank"
         );
 
         document
         .getElementById(
-            "supportModal"
+            "supportBtn"
         )
         .style.display = "none";
 
-    }
-  ); 
+        document
+        .getElementById(
+            "supportedBtn"
+        )
+        .style.display = "block";
+
+    });
+
+    document
+    .getElementById("supportedBtn")
+    .addEventListener(
+        "click",
+        ()=>{
+
+            localStorage.setItem(
+                "supporter",
+                "true"
+            );
+
+            document
+            .getElementById(
+                "supportModal"
+            )
+            .style.display = "none";
+
+        }
+    );
+
+});
+         
     
 //ЗАСТАВКА    
 window.addEventListener(
