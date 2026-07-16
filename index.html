@@ -707,11 +707,15 @@ function showWords(topic) {
 
              deleteBtn.style.opacity =
                  "1";
+         deleteBtn.style.pointerEvents =
+               "auto";
            deleteMode = true;
          } else {
 
             deleteBtn.style.opacity =
                  "0";
+          deleteBtn.style.pointerEvents =
+              "none";
           deleteMode = false;
               }    
            }
