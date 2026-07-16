@@ -702,7 +702,7 @@ function showWords(topic) {
                        ".delete-btn"
                  );
 
-          if (deltaX < -120) {
+          if (deltaX <= -100) {
 
              deleteBtn.style.opacity =
                  "1";
@@ -731,7 +731,7 @@ function showWords(topic) {
             cardOpened = true;
             
             card.style.transform =
-                "translateX(-120px)";
+                "translateX(-100px)";
            
             deleteBtn.style.opacity =
                 "1";
