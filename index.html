@@ -588,13 +588,39 @@ function addWord() {
     }
 
 });
-
-    let newOrder;
+let newOrder;
 
 if (insertBelowOrder !== null) {
 
-    newOrder =
-        insertBelowOrder + 50;
+    const nextWord =
+        allWords
+            .filter(
+                w =>
+                (w.order || w.id * 100) >
+                insertBelowOrder
+            )
+            .sort(
+                (a,b) =>
+                (a.order || a.id * 100) -
+                (b.order || b.id * 100)
+            )[0];
+
+    if (nextWord) {
+
+        const nextOrder =
+            nextWord.order ||
+            nextWord.id * 100;
+
+        newOrder =
+            (insertBelowOrder +
+             nextOrder) / 2;
+
+    } else {
+
+        newOrder =
+            insertBelowOrder + 100;
+
+    }
 
 } else {
 
@@ -602,7 +628,7 @@ if (insertBelowOrder !== null) {
         minOrder - 100;
 
 }
-
+    
 store.add({
     left,
     right,
