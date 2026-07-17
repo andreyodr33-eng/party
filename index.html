@@ -1032,7 +1032,11 @@ document
 
             currentTopic =
                 item.textContent;
-
+            
+            localStorage.setItem(
+                "currentTopic",
+                currentTopic
+          );
             document
             .getElementById(
                 "topicButton"
