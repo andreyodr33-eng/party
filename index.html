@@ -437,7 +437,8 @@ button:active{
          <div class="topic-item">Food</div>
          <div class="topic-item">Shopping</div>
          <div class="topic-item">Work</div>
-          <div class="topic-item">Transport</div>
+         <div class="topic-item">Transport</div>
+         <div class="topic-item">Conversation</div>
     </div>
    </div>
         <button id="addBtn">
@@ -559,11 +560,7 @@ request.onsuccess = function(event) {
 
     db = event.target.result;
 
- /*   document.getElementById("topic").value =
-         currentTopic;
-
-    showWords(currentTopic);
-    */
+ 
 };
 
 request.onerror = function(error) {
@@ -600,19 +597,8 @@ document
 .getElementById("lang2Btn")
 .textContent =
 languages[lang2Index].short;
-/*    
-document
-.getElementById("topic")
-.addEventListener("change", function() {
 
-    currentTopic = this.value;
-
-    showWords(currentTopic);
-});
-*/
- 
-
-function addWord() {
+ function addWord() {
 
     const left =
         document.getElementById("leftWord")
