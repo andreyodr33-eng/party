@@ -560,7 +560,13 @@ request.onsuccess = function(event) {
 
     db = event.target.result;
 
- 
+    document
+    .getElementById("topicButton")
+    .textContent =
+        currentTopic + " ▼";
+
+    showWords(currentTopic);
+
 };
 
 request.onerror = function(error) {
