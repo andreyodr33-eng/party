@@ -1286,7 +1286,34 @@ window.addEventListener("load", () => {
 
 });
          
-    
+document
+.getElementById("topicButton")
+.addEventListener(
+    "click",
+    ()=>{
+
+        const menu =
+            document.getElementById(
+                "topicMenu"
+            );
+
+        if (
+            menu.style.display ===
+            "block"
+        ){
+
+            menu.style.display =
+                "none";
+
+        } else {
+
+            menu.style.display =
+                "block";
+
+        }
+
+    }
+);    
 //ЗАСТАВКА    
 window.addEventListener(
     "load",
