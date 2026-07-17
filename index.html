@@ -428,7 +428,7 @@ button:active{
     <div class="actions">
         <div class="topic-wrapper">
          <div id="topicButton" class="topic-button">
-         Hospital
+         Hospital  ▼
      </div> 
     <div id="topicMenu" class="topic-menu">
 
@@ -1031,20 +1031,37 @@ function speak(text, lang) {
  
 
 // Выбор темы
-/*    
 document
-.getElementById("topic")
-.addEventListener("change", function() {
+.querySelectorAll(".topic-item")
+.forEach(item => {
 
-    currentTopic = this.value;
+    item.addEventListener(
+        "click",
+        ()=>{
 
-    localStorage.setItem(
-        "currentTopic",
-        currentTopic 
- );
-    showWords(currentTopic);
+            currentTopic =
+                item.textContent;
+
+            document
+            .getElementById(
+                "topicButton"
+            ).textContent =
+                currentTopic + " ▼";
+
+            document
+            .getElementById(
+                "topicMenu"
+            ).style.display =
+                "none";
+
+            showWords(
+                currentTopic
+            );
+
+        }
+    );
+
 });
-*/
 
 // Переключение языка 1
 
