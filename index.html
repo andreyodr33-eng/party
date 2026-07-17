@@ -267,6 +267,35 @@ button:active{
     cursor:pointer;
 
 }
+ .topic-menu{
+
+    display:none;
+
+    background:white;
+
+    border:1px solid #ccc;
+
+    border-radius:10px;
+
+    margin-top:4px;
+
+    overflow:hidden;
+
+}
+
+.topic-item{
+
+    padding:12px;
+
+    cursor:pointer;
+
+}
+
+.topic-item:hover{
+
+    background:#f5f5f5;
+
+}   
  .menu-btn{
 
     position:absolute;
@@ -391,7 +420,17 @@ button:active{
         </select>
      <div id="topicButton" class="topic-button">
          Hospital
-     </div>   
+     </div> 
+    <div id="topicMenu" class="topic-menu">
+
+         <div class="topic-item">Home</div>
+         <div class="topic-item">Hospital</div>
+         <div class="topic-item">Food</div>
+         <div class="topic-item">Shopping</div>
+         <div class="topic-item">Work</div>
+          <div class="topic-item">Transport</div>
+
+   </div>
         <button id="addBtn">
             Add
         </button>
