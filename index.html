@@ -1013,7 +1013,7 @@ function speak(text, lang) {
     else if (lang.startsWith("de")) {
         voice =
             voices.find(v =>
-                v.lang === "de-DE"
+                v.lang.includes("de")
             );
     }
     else if (lang.startsWith("fr")) {
