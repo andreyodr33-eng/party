@@ -764,6 +764,21 @@ function showWords(topic) {
             let currentX = 0;
             let deleteMode = false;
             let cardOpened = false;
+            // test
+           const cards =
+                document.getElementById("cards");
+
+            const deltaY =
+                e.touches[0].clientY -
+                (window.startY || e.touches[0].clientY);
+
+            if (
+                cards.scrollTop <= 0 &&
+                deltaY > 0
+            ){
+                e.preventDefault();
+             return;
+             } 
             
             card.addEventListener(
             "touchstart",
@@ -771,7 +786,9 @@ function showWords(topic) {
 
             startX =
             e.touches[0].clientX;
-
+          // test      
+            window.startY =
+                e.touches[0].clientY;
         }
       );
            card.addEventListener(
