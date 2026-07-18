@@ -530,6 +530,11 @@ const languages = [
         short: "ES"
     },
     {
+        name: "German",
+        code: "de-DE",
+        short: "DE"
+    },
+    {
         name: "French",
         code: "fr-FR",
         short: "FR"
@@ -1005,7 +1010,12 @@ function speak(text, lang) {
                 v.lang.includes("es")
             );
     }
-
+    else if (lang.startsWith("de")) {
+        voice =
+            voices.find(v =>
+                v.lang.includes("de")
+            );
+    }
     else if (lang.startsWith("fr")) {
         voice =
             voices.find(v =>
