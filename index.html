@@ -1036,14 +1036,7 @@ function speak(text, lang) {
                 v.lang.includes("ru")
             );
     }
-    console.log(
-        "Selected voice:",
-        voice?.name,
-        "|",
-        voice?.lang
-  );
-    utterance.voice = voice;
-    if (voice) {
+       if (voice) {
         utterance.voice = voice;
     }
 
