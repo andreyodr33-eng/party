@@ -1011,10 +1011,9 @@ function speak(text, lang) {
             );
     }
     else if (lang.startsWith("de")) {
-
-    voice =
-        voices.find(v =>
-            v.name.includes("Markus")
+        voice =
+            voices.find(v =>
+                v.lang.includes("de")
         );
 
 }
