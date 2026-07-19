@@ -1003,9 +1003,7 @@ function speak(text, lang) {
                 v.lang.includes("en")
             );
     }
-    if (voice) { 
-        untterance.voice = voice;
-    }    
+    
     else if (lang.startsWith("es")) {
         voice =
             voices.find(v =>
