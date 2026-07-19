@@ -1012,16 +1012,10 @@ function speak(text, lang) {
     }
     else if (lang.startsWith("de")) {
 
-    const germanVoices =
-        voices.filter(v =>
-            v.lang.includes("de")
+    voice =
+        voices.find(v =>
+            v.name.includes("Anna")
         );
-
-    alert(
-        germanVoices
-            .map(v => v.name)
-            .join("\n")
-    );
 
 }
     else if (lang.startsWith("fr")) {
