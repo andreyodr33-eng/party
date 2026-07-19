@@ -1011,11 +1011,19 @@ function speak(text, lang) {
             );
     }
     else if (lang.startsWith("de")) {
-        voice =
-            voices.find(v =>
-                v.lang.includes("de")
-            );
-    }
+
+    const germanVoices =
+        voices.filter(v =>
+            v.lang.includes("de")
+        );
+
+    alert(
+        germanVoices
+            .map(v => v.name)
+            .join("\n")
+    );
+
+}
     else if (lang.startsWith("fr")) {
         voice =
             voices.find(v =>
