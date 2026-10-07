@@ -1419,15 +1419,33 @@ window.addEventListener(
   </div>
 
 </div>
-<script>
-if("serviceWorker" in wordbook ){
+ <script>
 
-navigator.serviceWorker.register("./service-worker.js")
-.then(()=>console.log("SW registered"));
-navigator.serviceWorker.addEventListener('controllerchange', () => {
-  window.location.reload();
-});
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", function() {
+
+        navigator.serviceWorker
+            .register("./service-worker.js")
+            .then(function() {
+
+                console.log("Service Worker registered.");
+
+            })
+            .catch(function(error) {
+
+                console.error(
+                    "Service Worker registration failed:",
+                    error
+                );
+
+            });
+
+    });
+
 }
- </script>    
+
+</script>   
+   
 </body>
 </html>
