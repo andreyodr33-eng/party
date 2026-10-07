@@ -1,4 +1,4 @@
-const CACHE_NAME = "dictionary-v1";
+const CACHE_NAME = "wordbook-v1";
 
 const APP_FILES = [
     "./",
