@@ -1133,48 +1133,92 @@ document
 
 function importData(event) {
 
-    const file =
-        event.target.files[0];
+const file = event.target.files[0];
 
-    if (!file) return;
+if (!file) return;
 
-    const reader =
-        new FileReader();
+const reader = new FileReader();
 
-    reader.onload = function(e) {
+reader.onload = function(e) {
 
-        const data =
-            JSON.parse(
-                e.target.result
-            );
+    try {
 
-        const tx =
-            db.transaction(
-                "words",
-                "readwrite"
-            );
+        const data = JSON.parse(e.target.result);
 
-        const store =
-            tx.objectStore("words");
+        if (!Array.isArray(data.words)) {
+            throw new Error("Invalid JSON format");
+        }
 
-        data.words.forEach(word => {
+        const tx = db.transaction("words", "readwrite");
+        const store = tx.objectStore("words");
 
-            delete word.id;
+        store.getAll().onsuccess = function(e) {
 
-            store.add(word);
-        });
+            const existing = e.target.result;
+
+            let added = 0;
+            let skipped = 0;
+
+            data.words.forEach(word => {
+
+                const duplicate = existing.some(item =>
+                    item.left.trim().toLowerCase() ===
+                        word.left.trim().toLowerCase() &&
+
+                    item.right.trim().toLowerCase() ===
+                        word.right.trim().toLowerCase() &&
+
+                    item.lang1 === word.lang1 &&
+                    item.lang2 === word.lang2
+                );
+
+                if (duplicate) {
+                    skipped++;
+                    return;
+                }
+
+                const newWord = { ...word };
+
+                delete newWord.id;
+
+                store.add(newWord);
+
+                existing.push(newWord);
+
+                added++;
+            });
+
+        };
 
         tx.oncomplete = () => {
 
             showWords(currentTopic);
 
             alert(
-                "Import completed"
+                "Import completed\n\n" +
+                "Added: " + added + "\n" +
+                "Skipped: " + skipped
             );
-        };
-    };
 
-    reader.readAsText(file);
+            event.target.value = "";
+        };
+
+        tx.onerror = () => {
+            alert("Import failed");
+            event.target.value = "";
+        };
+
+    } catch (error) {
+
+        console.error("Import error:", error);
+
+        alert("Invalid JSON file");
+
+        event.target.value = "";
+    }
+};
+
+reader.readAsText(file);
 }
 
 function exportData() {
