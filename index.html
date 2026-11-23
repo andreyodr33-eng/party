@@ -1132,8 +1132,8 @@ document
 });
 
 function importData(event) {
-console.log("НОВАЯ ФУНКЦИЯ IMPORT DATA ЗАПУЩЕНА");
-alert("Запущена новая функция импорта");
+
+
 const file = event.target.files[0];
 
 if (!file) return;
@@ -1168,8 +1168,8 @@ existing.forEach(item => {
     });
 });
               data.words.forEach(word => {
-               console.log("IMPORT:", word);
-               console.log("EXISTING:", existing);  
+               
+                 
                 const duplicate = existing.some(item =>
                     item.left.trim().toLowerCase() ===
                         word.left.trim().toLowerCase() &&
