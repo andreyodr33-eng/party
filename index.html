@@ -1157,7 +1157,16 @@ reader.onload = function(e) {
         store.getAll().onsuccess = function(e) {
 
             const existing = e.target.result;
+            console.log("СРАВНЕНИЕ ПОЛЕЙ:");
 
+existing.forEach(item => {
+    console.log({
+        left: [item.left, data.words[0].left],
+        right: [item.right, data.words[0].right],
+        lang1: [item.lang1, data.words[0].lang1],
+        lang2: [item.lang2, data.words[0].lang2]
+    });
+});
               data.words.forEach(word => {
                console.log("IMPORT:", word);
                console.log("EXISTING:", existing);  
