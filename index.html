@@ -1158,7 +1158,8 @@ reader.onload = function(e) {
             const existing = e.target.result;
 
               data.words.forEach(word => {
-
+               console.log("IMPORT:", word);
+               console.log("EXISTING:", existing);  
                 const duplicate = existing.some(item =>
                     item.left.trim().toLowerCase() ===
                         word.left.trim().toLowerCase() &&
@@ -1491,4 +1492,5 @@ if ("serviceWorker" in navigator) {
    
 </body>
 </html>
+
 
