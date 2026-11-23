@@ -1151,15 +1151,13 @@ reader.onload = function(e) {
 
         const tx = db.transaction("words", "readwrite");
         const store = tx.objectStore("words");
-
+            let added = 0;
+            let skipped = 0;
         store.getAll().onsuccess = function(e) {
 
             const existing = e.target.result;
 
-            let added = 0;
-            let skipped = 0;
-
-            data.words.forEach(word => {
+              data.words.forEach(word => {
 
                 const duplicate = existing.some(item =>
                     item.left.trim().toLowerCase() ===
@@ -1493,3 +1491,4 @@ if ("serviceWorker" in navigator) {
    
 </body>
 </html>
+
